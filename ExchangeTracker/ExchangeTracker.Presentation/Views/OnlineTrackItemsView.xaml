@@ -1,0 +1,245 @@
+﻿<common:UserControlBase  x:Class="ExchangeTracker.Presentation.Views.OnlineTrackItemsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:common="clr-namespace:ExchangeTracker.Presentation.Common"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    DataContext="{Binding Source={StaticResource Locator}, Path=OnlineTrackItemsViewModel}"
+    Loaded="OnlineTrackItemsView_OnLoaded"
+                         x:Name="OnlineTrackUserControl"
+  >
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"></RowDefinition>
+      <RowDefinition Height="*"></RowDefinition>
+      <RowDefinition Height="Auto"></RowDefinition>
+    </Grid.RowDefinitions>
+    <ToolBar Grid.Row="0">
+      <Button x:Name="ExcellButton" Content="EXCEL" Click="ExcellButton_OnClick"></Button>
+    </ToolBar>
+
+    <dxg:GridControl Grid.Row="1" Name="dataGrid" ItemsSource="{Binding TrackItems}"
+                 SelectionMode="Row"
+                 SelectedItem="{Binding CurrentTrackItem}"
+                 dx:DXSerializer.StoreLayoutMode="All"
+                 CustomUnboundColumnData="DataGrid_OnCustomUnboundColumnData"
+      >
+      <dxg:GridControl.Columns>
+        <dxg:GridColumn FieldName="RowNumber" Header="ردیف" UnboundType="Integer" Width="50" ReadOnly="True"/>
+        <dxg:GridColumn x:Name="CompanySymbol" Header="نماد" Binding="{Binding Company.Symbol}" Fixed="Left"/>
+        <!--        <dxg:GridColumn Header="نام" Binding="{Binding Company.Caption}"/>-->
+        <dxg:GridColumn x:Name="LastTransactionPrice" Header="قیمت آخرین معامله" Binding="{Binding LastTransactionPrice}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+        <dxg:GridColumn x:Name="FinalPrice" Header="قیمت پایانی" Binding="{Binding FinalPrice}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <!--        <dxg:GridColumn Header="اولین قیمت" Binding="{Binding FirstPrice}"/>-->
+        <dxg:GridColumn x:Name="YesterdayPrice" Header="قیمت دیروز" Binding="{Binding YesterdayPrice}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="ChangeLastPercent" Header="درصد آخرین معامله"
+              Binding="{Binding LastTransactionPricePercent}">
+          <dxg:GridColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding RowData.Row.LastTransactionPricePercent, Mode=OneWay,StringFormat=%#0.0#;(%#0.0#)}" TextAlignment="Center"/>
+              <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding RowData.Row.LastTransactionPricePercent, Converter={StaticResource PercentBooleanConverter}}" Value="False">
+                  <Setter Property="TextBlock.Foreground" Value="Red"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding RowData.Row.LastTransactionPricePercent, Converter={StaticResource PercentBooleanConverter}}" Value="True">
+                  <Setter Property="TextBlock.Foreground" Value="Green"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding RowData.Row.LastTransactionPricePercent}" Value="0">
+                  <Setter Property="TextBlock.Foreground" Value="Black"/>
+                </DataTrigger>
+              </DataTemplate.Triggers>
+            </DataTemplate>
+
+          </dxg:GridColumn.CellTemplate>
+        </dxg:GridColumn>
+        <dxg:GridColumn x:Name="ChangeFinalPercent" Header="درصد پایانی"
+      Binding="{Binding FinalPricePercent}">
+          <dxg:GridColumn.CellTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding RowData.Row.FinalPricePercent, Mode=OneWay,StringFormat=%#0.0#;(%#0.0#)}" TextAlignment="Center"/>
+              <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding RowData.Row.FinalPricePercent, Converter={StaticResource PercentBooleanConverter}}" Value="False">
+                  <Setter Property="TextBlock.Foreground" Value="Red"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding RowData.Row.FinalPricePercent, Converter={StaticResource PercentBooleanConverter}}" Value="True">
+                  <Setter Property="TextBlock.Foreground" Value="Green"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding RowData.Row.FinalPricePercent}" Value="0">
+                  <Setter Property="TextBlock.Foreground" Value="Black"/>
+                </DataTrigger>
+              </DataTemplate.Triggers>
+            </DataTemplate>
+
+          </dxg:GridColumn.CellTemplate>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="TransactionCount" Header="تعداد معاملات" Binding="{Binding TransactionCount}"/>
+        <!--        <dxg:GridColumn Header="حجم معاملات" Binding="{Binding TransactionVolume}"/>-->
+        <dxg:GridColumn x:Name="TransactionValue" Header="ارزش معاملات" Binding="{Binding TransactionValue}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <!--        <dxg:GridColumn Header="ارزش بازار" Binding="{Binding MarketValue}"/>-->
+        <!--        <dxg:GridColumn Header="کمترین قیمت روز" Binding="{Binding MinDayPrice}"/>-->
+        <!--        <dxg:GridColumn Header="کمترین قیمت هفته" Binding="{Binding MinWeekPrice}"/>-->
+        <!--        <dxg:GridColumn Header="کمترین قیمت سال" Binding="{Binding MinYearPrice}"/>-->
+        <!--        <dxg:GridColumn Header="کمترین قیمت مجاز" Binding="{Binding MinValidPrice}"/>-->
+        <!--        <dxg:GridColumn Header="بیشترین قیمت روز" Binding="{Binding MaxDayPrice}"/>-->
+        <!--        <dxg:GridColumn Header="بیشترین قیمت هفته" Binding="{Binding MaxWeekPrice}"/>-->
+        <!--        <dxg:GridColumn Header="بیشترین قیمت سال" Binding="{Binding MaxYearPrice}"/>-->
+        <!--        <dxg:GridColumn Header="بیشترین قیمت مجاز" Binding="{Binding MaxValidPrice}"/>-->
+        <dxg:GridColumn Header="تعداد سهام" Binding="{Binding StocksCount}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+        <dxg:GridColumn Header="حجم مبنا" Binding="{Binding BaseVolume}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+        <dxg:GridColumn x:Name="FloatingStocks" Header="سهام شناور" Binding="{Binding FloatingStocks}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+        <dxg:GridColumn Header="میانگین حجم ماه" Binding="{Binding MonthVolumeAvg}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+        <!--        <dxg:GridColumn Header="زمان آخرین معامله" Binding="{Binding LastTransactionDateTime}"/>-->
+        <dxg:GridColumn x:Name="BuyRealCount" Header="تعداد خرید PER" Binding="{Binding BuyRealCount}"
+                        Style="{StaticResource BuyColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="BuyRealVolume" Header="حجم خرید PER" Binding="{Binding BuyRealVolume}"
+                        Style="{StaticResource BuyColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0" />
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="SellRealCount" Header="تعداد فروش PER" Binding="{Binding SellRealCount}"
+                         Style="{StaticResource SellColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="SellRealVolume" Header="حجم فروش PER" Binding="{Binding SellRealVolume}"
+                         Style="{StaticResource SellColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="BuyLegalCount" Header="تعداد خرید CO" Binding="{Binding BuyLegalCount}"
+                         Style="{StaticResource BuyColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="BuyLegalVolume" Header="حجم خرید CO" Binding="{Binding BuyLegalVolume}"
+                         Style="{StaticResource BuyColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="SellLegalCount" Header="تعداد فروش CO" Binding="{Binding SellLegalCount}"
+                         Style="{StaticResource SellColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="SellLegalVolume" Header="حجم فروش CO" Binding="{Binding SellLegalVolume}"
+                         Style="{StaticResource SellColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="SumBuyCount" Header="مجموع خرید" Binding="{Binding SumBuyCount}"
+                         Style="{StaticResource BuyColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="SumSellCount" Header="مجموع فروش" Binding="{Binding SumSellCount}"
+                         Style="{StaticResource SellColumnStyle}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+
+        <dxg:GridColumn x:Name="StatusId" Header="وضعیت" Binding="{Binding StatusId,Converter={StaticResource StatusConverter}}"/>
+        <dxg:GridColumn Header="EPS" Binding="{Binding Eps}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+        <dxg:GridColumn Header="P/E" Binding="{Binding Pe}">
+          <dxg:GridColumn.EditSettings>
+            <dxe:TextEditSettings DisplayFormat="N0"/>
+          </dxg:GridColumn.EditSettings>
+        </dxg:GridColumn>
+        <!--        <dxg:GridColumn Header="گروه P/E" Binding="{Binding GroupPe}"/>-->
+        <dxg:GridColumn x:Name="RegisterDateTime" Header="زمان ثبت آیتم" Binding="{Binding RegisterDateTime}"/>
+      </dxg:GridControl.Columns>
+      <dxg:GridControl.GroupSummary>
+        <dxg:GridSummaryItem SummaryType="Count" />
+      </dxg:GridControl.GroupSummary>
+      <dxg:GridControl.View>
+        <dxg:TableView x:Name="View" ShowGroupedColumns="True" NavigationStyle="Cell" AutoWidth="False" ScrollingMode="Smart"
+                       RowDoubleClick="View_OnRowDoubleClick"
+                       ShowAutoFilterRow="True"
+                       >
+          <!--          <dxg:TableView.RuntimeLocalizationStrings>-->
+          <!--            <dxg:GridRuntimeStringCollection>-->
+          <!--              <dxg:RuntimeStringIdInfo Id="ColumnChooserCaption" Value="ستون های مخفی"/>-->
+          <!--              <dxg:RuntimeStringIdInfo Id="MenuColumnShowColumnChooser" Value="نمایش انتخاب ستون"/>-->
+          <!--              <dxg:RuntimeStringIdInfo Id="MenuColumnHideColumnChooser" Value="مخفی کردن انتخاب ستون"/>-->
+          <!--              <dxg:RuntimeStringIdInfo Id="MenuColumnFilterEditor" Value="ویرایشگر فیلتر"/>-->
+          <!--              <dxg:RuntimeStringIdInfo Id="MenuColumnShowSearchPanel" Value="جستجو"/>-->
+          <!--              <dxg:RuntimeStringIdInfo Id="MenuColumnHideSearchPanel" Value="مخفی کردن جستجو"/>-->
+          <!--            </dxg:GridRuntimeStringCollection>-->
+          <!--          </dxg:TableView.RuntimeLocalizationStrings>-->
+        </dxg:TableView>
+      </dxg:GridControl.View>
+
+    </dxg:GridControl>
+
+    <!--    <dx:DXDockPanel Grid.Row="2" SnapsToDevicePixels="True">-->
+    <!--      <Button Height="150" Name="ApplyFilterButton" Margin="0,4,0,8" Content="Apply Filter" dx:DXDockPanel.Dock="Bottom" HorizontalAlignment="Center" Click="ApplyFilterButtonClick" />-->
+    <!--      <dxe:FilterControl x:Name="filterEditor" SourceControl="{Binding ElementName=filterGrid, Path=FilteredComponent}"-->
+    <!--                     FilterCriteria="{Binding ElementName=filterGrid, Path=FilterCriteria, Mode=TwoWay}"-->
+    <!--                     ShowGroupCommandsIcon="{Binding ElementName=showGroupCommandsIcon, Path=IsChecked, Mode=TwoWay}"-->
+    <!--                     ShowOperandTypeIcon="{Binding ElementName=showOperandTypeIcon, Path=IsChecked, Mode=TwoWay}"-->
+    <!--                     ShowToolTips="{Binding ElementName=showToolTips, Path=IsChecked, Mode=TwoWay}" />-->
+    <!--    </dx:DXDockPanel>-->
+  </Grid>
+</common:UserControlBase >
