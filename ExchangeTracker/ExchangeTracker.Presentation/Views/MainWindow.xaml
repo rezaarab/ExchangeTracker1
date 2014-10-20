@@ -20,7 +20,7 @@
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/basedark.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/baselight.xaml" />
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
       </ResourceDictionary.MergedDictionaries>
       <!--<common:ContentVisibilityConverter x:Key="ContentVisibilityConverter" />-->
@@ -39,7 +39,7 @@
             <Setter Property="ContentTemplate">
               <Setter.Value>
                 <DataTemplate>
-                  <Grid>
+                  <Grid Background="#42B1E1">
                     <Grid.RowDefinitions>
                       <RowDefinition Height="Auto"/>
                       <RowDefinition Height="*"/>
@@ -47,7 +47,7 @@
                     <ItemsControl Grid.Row="0" Grid.Column="0" Focusable="False" ItemsSource="{Binding Navigator.DataContext.CommandObjects}" >
                       <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                          <Button Style="{DynamicResource MetroCircleButtonStyle}" MinWidth="50" Height="50" Command="{Binding Command}" Content="{Binding Key,Converter={StaticResource ResourceConverter}}"/>
+                          <Button Foreground="White" Style="{DynamicResource MetroCircleButtonStyle}" MinWidth="50" Height="50" Command="{Binding Command}" Content="{Binding Key,Converter={StaticResource ResourceConverter}}"/>
                         </DataTemplate>
                       </ItemsControl.ItemTemplate>
                       <ItemsControl.ItemsPanel>

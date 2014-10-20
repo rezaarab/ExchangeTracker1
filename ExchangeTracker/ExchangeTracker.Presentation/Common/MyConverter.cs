@@ -36,18 +36,18 @@ namespace ExchangeTracker.Presentation.Common
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var val = value == null ? string.Empty : value.ToString();
-            if (val.Length == 1)
-                switch (val[0])
-                {
-                    case 'A':
-                        return "مجاز";
-                    case 'I':
-                        return "غیر مجاز";
-                    default:
-                        return val[0];
-                }
-            return "-";
+            var val = value == null ? string.Empty : value.ToString().Trim().ToUpper();
+            switch (val)
+            {
+                case "A":
+                    return "مجاز";
+                case "AR":
+                    return "مجاز-محفوظ";
+                case "IS":
+                    return "ممنوع-متوقف";
+                default:
+                    return val;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -1,0 +1,33 @@
+﻿<controls:MetroWindow  x:Class="ExchangeTracker.Presentation.Views.ChangeValueView"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                  ShowInTaskbar="True" WindowStartupLocation="CenterScreen" WindowState="Normal"
+        FlowDirection="RightToLeft" FontFamily="{StaticResource FontFamily3}" ResizeMode="NoResize"
+                       Height="150" Width="300" Loaded="ChangeValueView_OnLoaded">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/colors.xaml" />
+        <!--        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />-->
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/orange.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/baselight.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <!--<common:ContentVisibilityConverter x:Key="ContentVisibilityConverter" />-->
+    </ResourceDictionary>
+  </Window.Resources>
+  <StackPanel>
+    <StackPanel Height="20"></StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <TextBlock TextAlignment="Center" Text="عنوان جدید" Width="50"/>
+      <TextBox x:Name="NewValueTextBox"  Width="200"></TextBox>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+      <Button Click="ButtonOk_OnClick" Width="100" Margin="10">Ok</Button>
+      <Button Click="ButtonCancel_OnClick" Width="100" Margin="10">Cancel</Button>
+    </StackPanel>
+  </StackPanel>
+</controls:MetroWindow>

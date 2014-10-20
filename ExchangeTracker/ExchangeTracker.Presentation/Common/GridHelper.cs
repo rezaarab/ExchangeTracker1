@@ -42,7 +42,7 @@ namespace ExchangeTracker.Presentation.Common
         private static string GetLayoutFilePath(FrameworkElement control)
         {
             return Path.Combine(AppHelper.AppDataPath,
-                string.Format("{0}_{1}.xml", control.TryFindParent<UserControlBase>().Name, control.Name));
+                string.Format("{0}_{1}{2}.xml", control.TryFindParent<UserControlBase>().Name, control.Name, AppHelper.AppLayoutVersion));
         }
     }
 }

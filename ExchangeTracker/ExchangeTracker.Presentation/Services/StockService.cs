@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Media.Animation;
+using System.Xml;
+using DevExpress.Data.PLinq.Helpers;
+using DevExpress.Xpf.Editors.Helpers;
 using ExchangeTracker.Domain;
 using ExchangeTracker.Presentation.Common;
+using ExchangeTracker.Presentation.ViewModels;
 using FarsiLibrary.FX.Utils;
+using HtmlAgilityPack;
+using Jurassic;
 
 namespace ExchangeTracker.Presentation.Services
 {
@@ -21,47 +30,81 @@ namespace ExchangeTracker.Presentation.Services
         }
 
         private static readonly List<string> OfflineStaticData;
-        private static readonly string StaticDataFilePath = Path.Combine(AppHelper.AppDataPath, "staticdata.txt");
+        private static readonly string StaticDataFilePath = Path.Combine(AppHelper.AppDataPath, "staticdata" + AppHelper.AppStaticDataVersion + ".txt");
 
         public static void SaveStaticData()
         {
             File.WriteAllLines(StaticDataFilePath, OfflineStaticData);
         }
+        static readonly object Lck = new object();
+        private static List<TrackItem> _initDataCompanies;
         public static IEnumerable<TrackItem> GetInitDataCompanies()
         {
-            //            var namadha = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "Assets\\MarketWatchPlus.txt"));
-            var namadha = ReadAllText("http://www.tsetmc.com/tsev2/data/MarketWatchPlus.aspx");
-            //            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, string.Format("{0}.txt", Guid.NewGuid())), namadha, Encoding.UTF8);
-            var companiesArray =
-                namadha.Split(';').Select(p => p.Split(',')).Where(p =>
-                {
-                    bool b = p.GetSafe(1).StartsWith("IR");
-                    return b;
-                }).ToArray();
-            return companiesArray.Select(p => new TrackItem
+            lock (Lck)
             {
-                Id = Guid.NewGuid(),
-                Company = new Company
+                if (_initDataCompanies != null)
+                    return _initDataCompanies;
+                //            var namadha = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "Assets\\MarketWatchPlus.txt"));
+                var namadha = ReadAllText("http://www.tsetmc.com/tsev2/data/MarketWatchPlus.aspx");
+                //            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, string.Format("{0}.txt", Guid.NewGuid())), namadha, Encoding.UTF8);
+                var companiesArray =
+                    namadha.Split(';').Select(p => p.Split(',')).Where(p =>
+                    {
+                        bool b = p.GetSafe(1).StartsWith("IR");
+                        return b;
+                    }).ToArray();
+                var items = companiesArray.Select(p => new TrackItem
                 {
                     Id = Guid.NewGuid(),
-                    Caption = p.GetSafe(3),
-                    //                    StockCode = p.GetSafe(1],
-                    StockId = p.GetSafe(0),
-                    Symbol = p.GetSafe(2),
-                    Cid = p.GetSafe(18).ToType<int>(),
-                    GroupId = p.GetSafe(17).ToType<int>(),
-                },
-                TransactionCount = p.GetSafe(8).ToType<int>(),
-                TransactionVolume = p.GetSafe(9).ToType<int>(),
-                TransactionValue = p.GetSafe(10).ToType<decimal>(),
-                YesterdayPrice = p.GetSafe(13).ToType<decimal>(),
-                //                FirstPrice = p.GetSafe(5).ToType<decimal>(),
-                LastTransactionPrice = p.GetSafe(7).ToType<decimal>(),
-                FinalPrice = p.GetSafe(6).ToType<decimal>(),
-                //                MinDayPrice = p.GetSafe(11).ToType<decimal>(),
-                //                MaxDayPrice = p.GetSafe(12).ToType<decimal>(),
-                Eps = p.GetSafe(14).ToType<int>(),
-            }).ToArray();
+                    Company = new Company
+                    {
+                        Id = Guid.NewGuid(),
+                        Caption = p.GetSafe(3),
+                        StockCode = p.GetSafe(1),
+                        StockId = p.GetSafe(0),
+                        Symbol = p.GetSafe(2),
+                        Cid = p.GetSafe(18).ToType<int>(),
+                        GroupId = p.GetSafe(17).ToType<int>(),
+                    },
+                    TransactionCount = p.GetSafe(8).ToType<decimal>(),
+                    TransactionVolume = p.GetSafe(9).ToType<decimal>(),
+                    TransactionValue = p.GetSafe(10).ToType<decimal>(),
+                    YesterdayPrice = p.GetSafe(13).ToType<decimal>(),
+                    //                FirstPrice = p.GetSafe(5).ToType<decimal>(),
+                    LastTransactionPrice = p.GetSafe(7).ToType<decimal>(),
+                    FinalPrice = p.GetSafe(6).ToType<decimal>(),
+                    //                MinDayPrice = p.GetSafe(11).ToType<decimal>(),
+                    //                MaxDayPrice = p.GetSafe(12).ToType<decimal>(),
+                    Eps = p.GetSafe(14).ToType<decimal>(),
+                }).ToList();
+                try
+                {
+                    var otherHtml = ReadAllText("http://www.tsetmc.com/Loader.aspx?ParTree=111C1411")
+                        .Replace("<tr\">", "<tr>");
+                    var doc = new HtmlDocument();
+                    doc.LoadHtml(otherHtml);
+                    var trs = doc.GetElementbyId("tblToGrid").SelectNodes("tr").Skip(1).Select(
+                        p => new Tuple<string, string, string>(
+                            p.SelectNodes("td")[0].InnerText.Split(new[] { ',' })[0],
+                            p.SelectNodes("td")[0].InnerText.Split(new[] { ',' })[1],
+                            p.SelectNodes("td")[3].InnerText)).ToArray();
+                    var enumerable = items.Select(q => q.Company.StockId).ToArray();
+                    var otherItems = trs.Where(p => !enumerable.Contains(p.Item1)).ToList();
+                    otherItems.ForEach(p => items.Add(new TrackItem
+                    {
+                        Id = Guid.NewGuid(),
+                        Company = new Company
+                        {
+                            Id = Guid.NewGuid(),
+                            StockId = p.Item1,
+                            Symbol = p.Item2,
+                        },
+                        StatusId = p.Item3,
+                    }));
+                }
+                catch (Exception ex) { ExceptionHelper.ReportException(ex, "Load status of symbols"); }
+                return _initDataCompanies = items;
+            }
         }
 
         private static string ReadAllText(string url)
@@ -89,13 +132,13 @@ namespace ExchangeTracker.Presentation.Services
 
         public static IEnumerable<TrackItem> GetCompanyHistory(TrackItem trackItem)
         {
-            var namadha = ReadAllText("http://www.tsetmc.com/tsev2/data/clienttype.aspx?i=" + trackItem.Company.StockId + "&c=" + trackItem.Company.Cid);
-            var companiesArray =
-                namadha.Split(';').Select(p => p.Split(',')).Where(p =>
+            var hahoHistories = ReadAllText("http://www.tsetmc.com/tsev2/data/clienttype.aspx?i=" + trackItem.Company.StockId + "&c=" + trackItem.Company.Cid);
+            var hahoHistoryArray =
+                hahoHistories.Split(';').Select(p => p.Split(',')).Where(p =>
                 {
                     return true;
                 }).ToArray();
-            return companiesArray.OrderByDescending(p => p.GetSafe(0)).Select(p => new TrackItem
+            var trackItems = hahoHistoryArray.OrderByDescending(p => p.GetSafe(0)).Where(p => !String.IsNullOrWhiteSpace(p.GetSafe(0))).Select(p => new TrackItem
             {
                 Id = Guid.NewGuid(),
                 Company = new Company
@@ -107,19 +150,44 @@ namespace ExchangeTracker.Presentation.Services
                     Cid = trackItem.Company.Cid,
                     GroupId = trackItem.Company.GroupId,
                 },
-                LastTransactionDateTime = new PersianDate(DateTime.Parse(string.Format("{0}/{1}/{2}",
+                LastTransactionDateTime = new PersianDate(DateTime.Parse(String.Format("{0}/{1}/{2}",
                     p.GetSafe(0).Substring(0, 4),
                     p.GetSafe(0).Substring(4, 2),
                     p.GetSafe(0).Substring(6, 2)))).ToString(""),
-                BuyLegalVolume = p.GetSafe(6).ToType<int>(),
-                BuyRealVolume = p.GetSafe(5).ToType<int>(),
-                SellLegalVolume = p.GetSafe(8).ToType<int>(),
-                SellRealVolume = p.GetSafe(7).ToType<int>(),
-                BuyLegalCount = p.GetSafe(2).ToType<int>(),
-                BuyRealCount = p.GetSafe(1).ToType<int>(),
-                SellLegalCount = p.GetSafe(4).ToType<int>(),
-                SellRealCount = p.GetSafe(3).ToType<int>(),
+                BuyLegalVolume = p.GetSafe(6).ToType<decimal>(),
+                BuyRealVolume = p.GetSafe(5).ToType<decimal>(),
+                SellLegalVolume = p.GetSafe(8).ToType<decimal>(),
+                SellRealVolume = p.GetSafe(7).ToType<decimal>(),
+                BuyLegalCount = p.GetSafe(2).ToType<decimal>(),
+                BuyRealCount = p.GetSafe(1).ToType<decimal>(),
+                SellLegalCount = p.GetSafe(4).ToType<decimal>(),
+                SellRealCount = p.GetSafe(3).ToType<decimal>(),
             }).ToArray();
+            var histories = ReadAllText("http://www.tsetmc.com/tsev2/data/InstTradeHistory.aspx?i=" + trackItem.Company.StockId + "&Top=" + 999 + "&A=1");
+            histories.Split(new[] {';'}).Select(p => p.Split(new[] {'@'}));
+//            var xmlDoc = new XmlDocument();
+//            xmlDoc.LoadXml(histories);
+//            var nodes = xmlDoc.SelectNodes("rows/row");
+//            foreach (XmlNode node in nodes)
+//            {
+//                var date = node.Attributes["id"].Value;
+//                var pDate = new PersianDate(DateTime.Parse(String.Format("{0}/{1}/{2}",
+//                    date.Substring(0, 4),
+//                    date.Substring(4, 2),
+//                    date.Substring(6, 2)))).ToString("");
+//                var track = trackItems.FirstOrDefault(p => p.LastTransactionDateTime == pDate);
+//                if (track != null)
+//                {
+//                    track.FinalPrice = node.ChildNodes[5].InnerText.ToType<decimal>();//4
+//                    track.YesterdayPrice = node.ChildNodes[10].InnerText.ToType<decimal>();//9
+//                    track.LastTransactionPrice = node.ChildNodes[8].InnerText.ToType<decimal>();//7
+//                }
+//                else
+//                {
+//
+//                }
+//            }
+            return trackItems.ToArray();
         }
 
 
@@ -146,16 +214,18 @@ namespace ExchangeTracker.Presentation.Services
             }).ContinueWith(result =>
             {
                 var infoDataArray = result.Result;
+                if (infoDataArray.Length <= 4)
+                    return;
                 var eData = infoDataArray == null ? null : infoDataArray[4];
                 var oV = infoDataArray == null ? null : infoDataArray[0];
 
                 string staticValues = GetOfflineStaticValues(item.Company.StockId);
-                if (string.IsNullOrEmpty(staticValues))
+                if (String.IsNullOrEmpty(staticValues))
                 {
                     staticValues = GetOnlineStaticValues(item.Company.StockId);
-                    OfflineStaticData.Add(string.Format("{0},{1}", item.Company.StockId, staticValues));
+                    OfflineStaticData.Add(String.Format("{0},{1}", item.Company.StockId, staticValues));
                 }
-                var staticData = string.IsNullOrEmpty(staticValues) ? null : staticValues.Split(',');
+                var staticData = String.IsNullOrEmpty(staticValues) ? null : staticValues.Split(',');
 
                 SetTrackItemValues(item, eData, oV, staticData);
             })).ToList();
@@ -172,12 +242,12 @@ namespace ExchangeTracker.Presentation.Services
             var oV = infoDataArray == null ? null : infoDataArray[0];
 
             string staticValues = GetOfflineStaticValues(item.Company.StockId);
-            if (string.IsNullOrEmpty(staticValues))
+            if (String.IsNullOrEmpty(staticValues))
             {
                 staticValues = GetOnlineStaticValues(item.Company.StockId);
-                OfflineStaticData.Add(string.Format("{0},{1}", item.Company.StockId, staticValues));
+                OfflineStaticData.Add(String.Format("{0},{1}", item.Company.StockId, staticValues));
             }
-            var staticData = string.IsNullOrEmpty(staticValues) ? null : staticValues.Split(',');
+            var staticData = String.IsNullOrEmpty(staticValues) ? null : staticValues.Split(',');
 
             SetTrackItemValues(item, eData, oV, staticData);
         }
@@ -187,9 +257,9 @@ namespace ExchangeTracker.Presentation.Services
             var staticValues = GetOnlineStaticValues(stockId);
             var index = OfflineStaticData.FindIndex(p => p.Split(new[] { ',' })[0] == stockId);
             if (index < 0)
-                OfflineStaticData.Add(string.Format("{0},{1}", stockId, staticValues));
+                OfflineStaticData.Add(String.Format("{0},{1}", stockId, staticValues));
             else
-                OfflineStaticData[index] = string.Format("{0},{1}", stockId, staticValues);
+                OfflineStaticData[index] = String.Format("{0},{1}", stockId, staticValues);
         }
 
         private static void SetTrackItemValues(TrackItem item, string[] eData, string[] oV, string[] staticData)
@@ -199,14 +269,14 @@ namespace ExchangeTracker.Presentation.Services
 
             if (eData != null && eData.Count() > 8)
             {
-                item.BuyLegalCount = eData[6].ToType<int>();
-                item.BuyLegalVolume = eData[1].ToType<int>();
-                item.BuyRealCount = eData[5].ToType<int>();
-                item.BuyRealVolume = eData[0].ToType<int>();
-                item.SellLegalCount = eData[6].ToType<int>();
-                item.SellLegalVolume = eData[4].ToType<int>();
-                item.SellRealCount = eData[8].ToType<int>();
-                item.SellRealVolume = eData[3].ToType<int>();
+                item.BuyLegalCount = eData[6].ToType<decimal>();
+                item.BuyLegalVolume = eData[1].ToType<decimal>();
+                item.BuyRealCount = eData[5].ToType<decimal>();
+                item.BuyRealVolume = eData[0].ToType<decimal>();
+                item.SellLegalCount = eData[9].ToType<decimal>();
+                item.SellLegalVolume = eData[4].ToType<decimal>();
+                item.SellRealCount = eData[8].ToType<decimal>();
+                item.SellRealVolume = eData[3].ToType<decimal>();
             }
 
             if (oV != null && oV.Count() > 10)
@@ -216,15 +286,17 @@ namespace ExchangeTracker.Presentation.Services
                 item.LastTransactionDateTime = oV.GetSafe(0);
                 item.LastTransactionPrice = oV.GetSafe(2).ToType<decimal>();
                 //                item.MarketValue = staticData != null && staticData.Count() > 1
-                //                    ? oV.GetSafe(3).ToType<int>() * staticData.GetSafe(1).ToType<int>()
+                //                    ? oV.GetSafe(3).ToType<decimal>() * staticData.GetSafe(1).ToType<decimal>()
                 //                    : 0;
                 //                item.MaxDayPrice = oV.GetSafe(7).ToType<decimal>();
                 //                item.MinDayPrice = oV.GetSafe(6).ToType<decimal>();
-                item.StatusId = (oV.GetSafe(1) ?? string.Empty).ToCharArray().GetSafe(0);
-                item.TransactionCount = oV.GetSafe(8).ToType<int>();
+                item.StatusId = (oV.GetSafe(1) ?? String.Empty);
+                item.TransactionCount = oV.GetSafe(8).ToType<decimal>();
                 item.TransactionValue = oV.GetSafe(10).ToType<decimal>();
-                item.TransactionVolume = oV.GetSafe(9).ToType<int>();
+                item.TransactionVolume = oV.GetSafe(9).ToType<decimal>();
                 item.YesterdayPrice = oV.GetSafe(5).ToType<decimal>();
+                if (staticData != null && staticData.Length >= 10 && staticData.GetSafe(10).ToType<decimal>() > 0)
+                    item.Pe = oV.GetSafe(3).ToType<decimal>() / staticData.GetSafe(10).ToType<decimal>();
             }
 
             SetStaticData(item, staticData);
@@ -234,25 +306,25 @@ namespace ExchangeTracker.Presentation.Services
         {
             if (staticData != null && staticData.Count() > 9)
             {
-                item.BaseVolume = staticData.GetSafe(0).ToType<int>();
-                item.FloatingStocks = staticData.GetSafe(8).ToType<int>();
+                item.BaseVolume = staticData.GetSafe(0).ToType<decimal>();
+                item.FloatingStocks = staticData.GetSafe(8).ToType<decimal>();
                 //                item.MaxValidPrice = staticData.GetSafe(2).ToType<decimal>();
                 //                item.MaxWeekPrice = staticData.GetSafe(4).ToType<decimal>();
                 //                item.MaxYearPrice = staticData.GetSafe(6).ToType<decimal>();
                 //                item.MinValidPrice = staticData.GetSafe(3).ToType<decimal>();
                 //                item.MinWeekPrice = staticData.GetSafe(5).ToType<decimal>();
                 //                item.MinYearPrice = staticData.GetSafe(7).ToType<decimal>();
-                item.MonthVolumeAvg = staticData.GetSafe(9).ToType<int>();
-                item.StocksCount = staticData.GetSafe(1).ToType<int>();
+                item.MonthVolumeAvg = staticData.GetSafe(9).ToType<decimal>();
+                item.StocksCount = staticData.GetSafe(1).ToType<decimal>();
             }
         }
 
         public static string GetOfflineStaticValues(string stockId)
         {
             var str = OfflineStaticData.FirstOrDefault(p => p.Split(new[] { ',' })[0] == stockId);
-            if (string.IsNullOrEmpty(str))
+            if (String.IsNullOrEmpty(str))
                 return str;
-            return string.Join(",", str.Split(new[] { ',' }).Skip(1));
+            return String.Join(",", str.Split(new[] { ',' }).Skip(1));
         }
 
         public static string GetOnlineStaticValues(string stockId)
@@ -262,7 +334,7 @@ namespace ExchangeTracker.Presentation.Services
             string html;
             using (var wc = new GZipWebClient())
                 html = wc.DownloadString(url);
-            var doc = new HtmlAgilityPack.HtmlDocument();
+            var doc = new HtmlDocument();
             doc.LoadHtml(html);
             var script = doc
                 .DocumentNode
@@ -271,7 +343,7 @@ namespace ExchangeTracker.Presentation.Services
                 .InnerText;
 
             // Return the data of spect and stringify it into a proper JSON object
-            var engine = new Jurassic.ScriptEngine();
+            var engine = new ScriptEngine();
             var fileds = new[]
             {
                 "BaseVol.toString()",           //0
@@ -283,14 +355,24 @@ namespace ExchangeTracker.Presentation.Services
                 "MaxYear.toString()",           //6
                 "MinYear.toString()",           //7
                 "KAjCapValCpsIdx.toString()",   //8
-                "QTotTran5JAvg.toString()"      //9
+                "QTotTran5JAvg.toString()",     //9
+                "EstimatedEPS.toString()"       //10
             };
-            string code = "(function() { " + script + " var jarray=[" + string.Join(",", fileds) + "]; return jarray.join();})()";
+            string code = "(function() { " + script + " var jarray=[" + String.Join(",", fileds) + "]; return jarray.join();})()";
             return engine.Evaluate(code).ToString();
             //            var json = JSONObject.Stringify(engine, result);
         }
 
+        public static string GetFileName()
+        {
+            return Path.Combine(AppHelper.AppDataPath, "SymbolGroups.xml");
+        }
 
+        public static ObservableCollection<SymbolGroup> GetSymbolGroups()
+        {
+            return SerializeHelper.DeSerializeObject<ObservableCollection<SymbolGroup>>(
+                GetFileName());
+        }
     }
     public class GZipWebClient : WebClient
     {

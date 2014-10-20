@@ -17,6 +17,7 @@ using DevExpress.Xpf.Editors.Helpers;
 using ExchangeTracker.Presentation.Common;
 using ExchangeTracker.Presentation.Services;
 using ExchangeTracker.Presentation.ViewModels;
+using ExchangeTracker.Presentation.Views;
 using GalaSoft.MvvmLight.Ioc;
 using MahApps.Metro.Controls;
 
@@ -29,6 +30,11 @@ namespace ExchangeTracker.Presentation
     {
         public MainWindow()
         {
+            var login = new LoginView();
+            login.ShowDialog();
+            if (!login.IsAccept)
+                Application.Current.Shutdown();
+
             InitializeComponent();
             SimpleIoc.Default.Register(() => this);
         }
@@ -61,7 +67,6 @@ namespace ExchangeTracker.Presentation
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)

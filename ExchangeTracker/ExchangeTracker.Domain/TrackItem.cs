@@ -5,20 +5,20 @@ namespace ExchangeTracker.Domain
     public class TrackItem : Entity
     {
         private Company _company;
-        private int _buyRealVolume;
-        private int _sellRealVolume;
-        private int _buyLegalVolume;
-        private int _sellLegalVolume;
-        private int _buyRealCount;
-        private int _sellRealCount;
-        private int _buyLegalCount;
-        private int _sellLegalCount;
+        private decimal _buyRealVolume;
+        private decimal _sellRealVolume;
+        private decimal _buyLegalVolume;
+        private decimal _sellLegalVolume;
+        private decimal _buyRealCount;
+        private decimal _sellRealCount;
+        private decimal _buyLegalCount;
+        private decimal _sellLegalCount;
         private decimal _lastTransactionPrice;
         private decimal _finalPrice;
         //        private decimal _firstPrice;
         private decimal _yesterdayPrice;
-        private int _transactionCount;
-        private int _transactionVolume;
+        private decimal _transactionCount;
+        private decimal _transactionVolume;
         private decimal _transactionValue;
         //        private decimal _marketValue;
         //        private decimal _minDayPrice;
@@ -29,14 +29,14 @@ namespace ExchangeTracker.Domain
         //        private decimal _maxWeekPrice;
         //        private decimal _maxValidPrice;
         //        private decimal _maxYearPrice;
-        private int _stocksCount;
-        private int _baseVolume;
-        private double _floatingStocks;
-        private int _monthVolumeAvg;
+        private decimal _stocksCount;
+        private decimal _baseVolume;
+        private decimal _floatingStocks;
+        private decimal _monthVolumeAvg;
         private string _lastTransactionDateTime;
-        private char _statusId;
+        private string _statusId;
         private decimal _eps;
-        private double _pe;
+        private decimal _pe;
         //        private float _groupPe;
         private string _registerDateTime;
 
@@ -49,7 +49,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// حجم خرید CO
         /// </summary>
-        public int BuyRealVolume
+        public decimal BuyRealVolume
         {
             get { return _buyRealVolume; }
             set { SetProperty(ref _buyRealVolume, value); }
@@ -58,7 +58,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// حجم فروش حقیقی
         /// </summary>
-        public int SellRealVolume
+        public decimal SellRealVolume
         {
             get { return _sellRealVolume; }
             set { SetProperty(ref _sellRealVolume, value); }
@@ -67,7 +67,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// حجم خرید حقوقی
         /// </summary>
-        public int BuyLegalVolume
+        public decimal BuyLegalVolume
         {
             get { return _buyLegalVolume; }
             set { SetProperty(ref _buyLegalVolume, value); }
@@ -76,7 +76,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// حجم فروش حقوقی
         /// </summary>
-        public int SellLegalVolume
+        public decimal SellLegalVolume
         {
             get { return _sellLegalVolume; }
             set { SetProperty(ref _sellLegalVolume, value); }
@@ -85,7 +85,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// تعداد خرید حقیقی
         /// </summary>
-        public int BuyRealCount
+        public decimal BuyRealCount
         {
             get { return _buyRealCount; }
             set { SetProperty(ref _buyRealCount, value); RaisePropertyChanged(() => SumBuyCount); }
@@ -94,7 +94,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// تعداد فروش حقیقی
         /// </summary>
-        public int SellRealCount
+        public decimal SellRealCount
         {
             get { return _sellRealCount; }
             set { SetProperty(ref _sellRealCount, value); RaisePropertyChanged(() => SumSellCount); }
@@ -103,7 +103,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// تعداد خرید حقوقی
         /// </summary>
-        public int BuyLegalCount
+        public decimal BuyLegalCount
         {
             get { return _buyLegalCount; }
             set { SetProperty(ref _buyLegalCount, value); RaisePropertyChanged(() => SumBuyCount); }
@@ -112,7 +112,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// تعداد فروش حقوقی
         /// </summary>
-        public int SellLegalCount
+        public decimal SellLegalCount
         {
             get { return _sellLegalCount; }
             set { SetProperty(ref _sellLegalCount, value); RaisePropertyChanged(() => SumSellCount); }
@@ -121,12 +121,12 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// مجموع خرید
         /// </summary>
-        public int SumBuyCount { get { return BuyRealCount + BuyLegalCount; } }
+        public decimal SumBuyCount { get { return BuyRealCount + BuyLegalCount; } }
 
         /// <summary>
         /// مجموع فروش
         /// </summary>
-        public int SumSellCount { get { return SellRealCount + SellLegalCount; } }
+        public decimal SumSellCount { get { return SellRealCount + SellLegalCount; } }
 
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace ExchangeTracker.Domain
         /// </summary>
         public decimal LastTransactionPricePercent
         {
-            get { return YesterdayPrice == 0 ? 0 : (LastTransactionPrice - YesterdayPrice) / YesterdayPrice; }
+            get { return YesterdayPrice == 0 ? 0 : (LastTransactionPrice - YesterdayPrice) * 100 / YesterdayPrice; }
         }
 
 
@@ -160,7 +160,7 @@ namespace ExchangeTracker.Domain
         /// </summary>
         public decimal FinalPricePercent
         {
-            get { return YesterdayPrice == 0 ? 0 : (FinalPrice - YesterdayPrice) / YesterdayPrice; }
+            get { return YesterdayPrice == 0 ? 0 : (FinalPrice - YesterdayPrice) * 100 / YesterdayPrice; }
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// تعداد معاملات
         /// </summary>
-        public int TransactionCount
+        public decimal TransactionCount
         {
             get { return _transactionCount; }
             set { SetProperty(ref _transactionCount, value); }
@@ -196,7 +196,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// حجم معاملات
         /// </summary>
-        public int TransactionVolume
+        public decimal TransactionVolume
         {
             get { return _transactionVolume; }
             set { SetProperty(ref _transactionVolume, value); }
@@ -295,7 +295,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// تعداد سهام
         /// </summary>
-        public int StocksCount
+        public decimal StocksCount
         {
             get { return _stocksCount; }
             set { SetProperty(ref _stocksCount, value); }
@@ -304,16 +304,16 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// حجم مبنا
         /// </summary>
-        public int BaseVolume
+        public decimal BaseVolume
         {
             get { return _baseVolume; }
             set { SetProperty(ref _baseVolume, value); }
         }
 
         /// <summary>
-        /// سهام شناور
+        /// ضریب شناور
         /// </summary>
-        public double FloatingStocks
+        public decimal FloatingStocks
         {
             get { return _floatingStocks; }
             set { SetProperty(ref _floatingStocks, value); }
@@ -322,7 +322,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// میانگین حجم ماه
         /// </summary>
-        public int MonthVolumeAvg
+        public decimal MonthVolumeAvg
         {
             get { return _monthVolumeAvg; }
             set { SetProperty(ref _monthVolumeAvg, value); }
@@ -340,7 +340,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// وضعیت
         /// </summary>
-        public char StatusId
+        public string StatusId
         {
             get { return _statusId; }
             set { SetProperty(ref  _statusId, value); }
@@ -358,7 +358,7 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// P/E(امید بازگشت سرمایه به سال)
         /// </summary>
-        public double Pe
+        public decimal Pe
         {
             get { return _pe; }
             set { SetProperty(ref _pe, value); }

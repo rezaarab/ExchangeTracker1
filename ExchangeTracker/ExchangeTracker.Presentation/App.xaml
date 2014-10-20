@@ -9,6 +9,8 @@
              d1p1:Ignorable="d"
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:themes="http://schemas.devexpress.com/winfx/2008/xaml/grid/themekeys"
              DispatcherUnhandledException="Application_DispatcherUnhandledException"
              >
   <Application.Resources>
@@ -39,7 +41,9 @@
       <sys:String x:Key="True">بلی</sys:String>
       <sys:String x:Key="False">خیر</sys:String>
       <sys:String x:Key="OnlineTrackItems">نمای بازار</sys:String>
+      <sys:String x:Key="SymbolGroup">گروه نماد</sys:String>
       <sys:String x:Key="MainWindow">سیستم آنلاین نمای بازار</sys:String>
+      <sys:String x:Key="AddGroup">جدید</sys:String>
 
       <Style x:Key="TabHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Style.Setters>
@@ -87,9 +91,14 @@
       <Style x:Key="BuyColumnStyle" TargetType="dxg:GridColumn">
         <Setter Property="CellStyle">
           <Setter.Value>
-            <Style TargetType="dxg:CellContentPresenter">
+            <Style TargetType="dxg:CellContentPresenter"   BasedOn="{StaticResource {themes:GridRowThemeKey ResourceKey=CellStyle}}">
               <Setter Property="Background" Value="#E0FFE0"/>
               <Setter Property="Foreground" Value="#1F001F"/>
+              <Style.Triggers>
+                <Trigger Property="IsFocusedCell" Value="True">
+                  <Setter Property="Background" Value="White"/>
+                </Trigger>
+              </Style.Triggers>
             </Style>
           </Setter.Value>
         </Setter>
@@ -97,9 +106,14 @@
       <Style x:Key="SellColumnStyle" TargetType="dxg:GridColumn">
         <Setter Property="CellStyle">
           <Setter.Value>
-            <Style TargetType="dxg:CellContentPresenter">
+            <Style TargetType="dxg:CellContentPresenter" BasedOn="{StaticResource {themes:GridRowThemeKey ResourceKey=CellStyle}}">
               <Setter Property="Background" Value="#FFE0E0"/>
               <Setter Property="Foreground" Value="#001F1F"/>
+              <Style.Triggers>
+                <Trigger Property="IsFocusedCell" Value="True">
+                  <Setter Property="Background" Value="White"/>
+                </Trigger>
+              </Style.Triggers>
             </Style>
           </Setter.Value>
         </Setter>
@@ -121,6 +135,17 @@
       <!--        </Style.Setters>-->
       <!---->
       <!--      </Style>-->
+      <Style TargetType="dxg:GridColumn" x:Key="ColumnFormulaStyle">
+        <Setter Property="UnboundType" Value="Decimal"/>
+        <Setter Property="AllowUnboundExpressionEditor" Value="True"/>
+        <Setter Property="AllowEditing" Value="False"/>
+        <Setter Property="EditSettings">
+          <Setter.Value>
+            <dxe:TextEditSettings DisplayFormat="N2"/>
+          </Setter.Value>
+        </Setter>
+<!--        <Setter Property="EditSettings" Value="dxe:TextSettings DisplayFormat=N0"/>-->
+      </Style>
     </ResourceDictionary>
   </Application.Resources>
 </Application>

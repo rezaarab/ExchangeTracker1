@@ -15,6 +15,7 @@ namespace ExchangeTracker.Presentation.ViewModels
                 {
                     new MenuCommandObject(SimpleIoc.Default.GetInstance<INavigation>("EmptyView"), "ஃ"),//"ஃ※⁂∷╸─✣"፧
                     new MenuCommandObject(SimpleIoc.Default.GetInstance<INavigation>("OnlineTrackItemsView"), "OnlineTrackItems"),
+                    new MenuCommandObject(SimpleIoc.Default.GetInstance<INavigation>("SymbolGroupView"), "SymbolGroup"),
                 };
         }
         public ObservableCollection<MenuCommandObject> MenuCommandObjects { get; set; }

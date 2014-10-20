@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using ExchangeTracker.Presentation.Common;
+using ExchangeTracker.Presentation.Views;
 using FarsiLibrary.FX.Utils;
 
 namespace ExchangeTracker.Presentation

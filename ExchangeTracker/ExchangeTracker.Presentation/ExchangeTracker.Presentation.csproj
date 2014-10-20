@@ -13,26 +13,29 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>4</ApplicationRevision>
+    <InstallUrl>http://exchangetracker.codeplex.com/releases/clickonce/</InstallUrl>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>10</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -98,6 +101,7 @@
     <Reference Include="System" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.4.3.31.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -114,16 +118,28 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\AppHelper.cs" />
+    <Compile Include="Common\CryptoHelper.cs" />
     <Compile Include="Common\GridHelper.cs" />
     <Compile Include="Common\MyExtentions.cs" />
+    <Compile Include="Common\SerializeHelper.cs" />
     <Compile Include="Services\StockService.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ViewModels\CompanyHistoryViewModel.cs" />
+    <Compile Include="ViewModels\SymbolGroupViewModel.cs" />
     <Compile Include="ViewModels\SymbolMultiTabViewModel.cs" />
     <Compile Include="ViewModels\OnlineTrackItemsViewModel.cs" />
     <Compile Include="Views\CompanyHistoryView.xaml.cs">
       <DependentUpon>CompanyHistoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChangeValueView.xaml.cs">
+      <DependentUpon>ChangeValueView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginView.xaml.cs">
+      <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SymbolGroupView.xaml.cs">
+      <DependentUpon>SymbolGroupView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SymbolMultiTabView.xaml.cs">
       <DependentUpon>SymbolMultiTabView.xaml</DependentUpon>
@@ -142,6 +158,18 @@
     <Page Include="Common\NavigateContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChangeValueView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LoginView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SymbolGroupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SymbolMultiTabView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -242,6 +270,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="HTMLPage1.html" />
     <Resource Include="Assets\1403270927_Close.png" />
     <Content Include="Assets\MarketWatchPlus.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -466,16 +495,6 @@
       <TargetPath>
       </TargetPath>
       <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>Assembly</FileType>
-    </PublishFile>
-    <PublishFile Include="System.Windows.Interactivity">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Exclude</PublishState>
       <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>

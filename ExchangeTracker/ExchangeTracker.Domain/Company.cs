@@ -1,5 +1,8 @@
-﻿namespace ExchangeTracker.Domain
+﻿using System;
+
+namespace ExchangeTracker.Domain
 {
+    [Serializable]
     public class Company : Entity
     {
         private string _stockId;
@@ -8,12 +11,18 @@
         private string _caption;
         private int _cid;
         private int _groupId;
-        private double _defaultFloatingStocks;
+        private decimal _defaultFloatingStocks;
 
         public string StockId
         {
             get { return _stockId; }
             set { SetProperty(ref _stockId, value); }
+        }
+
+        public string StockCode
+        {
+            get { return _stockCode; }
+            set { SetProperty(ref _stockCode, value); }
         }
 
         public string Symbol
@@ -40,7 +49,7 @@
             set { SetProperty(ref _groupId, value); }
         }
 
-        public double DefaultFloatingStocks
+        public decimal DefaultFloatingStocks
         {
             get { return _defaultFloatingStocks; }
             set { SetProperty(ref  _defaultFloatingStocks, value); }

@@ -45,10 +45,12 @@ namespace ExchangeTracker.Presentation.ViewModels
             SimpleIoc.Default.Register<MainWindowViewModel>();
             SimpleIoc.Default.Register<OnlineTrackItemsViewModel>();
             SimpleIoc.Default.Register<SymbolMultiTabViewModel>();
+            SimpleIoc.Default.Register<SymbolGroupViewModel>();
 
             SimpleIoc.Default.Register<INavigation>(() => new EmptyView(), "EmptyView");
             SimpleIoc.Default.Register<INavigation>(() => new OnlineTrackItemsView(), "OnlineTrackItemsView");
             SimpleIoc.Default.Register<INavigation>(() => new SymbolMultiTabView(), "SymbolMultiTabView");
+            SimpleIoc.Default.Register<INavigation>(() => new SymbolGroupView(), "SymbolGroupView");
         }
 
         public MainWindowViewModel MainWindowViewModel
@@ -71,6 +73,13 @@ namespace ExchangeTracker.Presentation.ViewModels
             get
             {
                 return ServiceLocator.Current.GetInstance<SymbolMultiTabViewModel>();
+            }
+        }
+        public SymbolGroupViewModel SymbolGroupViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SymbolGroupViewModel>();
             }
         }
     }

@@ -16,6 +16,8 @@ namespace ExchangeTracker.Presentation.Common
                 Directory.CreateDirectory(AppDataPath);
         }
         public static string AppDataPath = "C:\\ExchangeTracker\\";
+        public static string AppLayoutVersion = "1";
+        public static string AppStaticDataVersion = "1";
 
         public static MainWindow MainWindow
         {

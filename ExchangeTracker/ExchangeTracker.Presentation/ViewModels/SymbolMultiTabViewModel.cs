@@ -23,7 +23,11 @@ namespace ExchangeTracker.Presentation.ViewModel
                 if (MenuCommandObjects.All(p => p.Key != trackItem.Company.Symbol))
                 {
                     var companyHistoryViewModel = new CompanyHistoryViewModel { TrackItem = trackItem };
-                    var menuCommandObject = new MenuCommandObject(new CompanyHistoryView { DataContext = companyHistoryViewModel }, trackItem.Company.Symbol);
+                    var menuCommandObject = new MenuCommandObject(new CompanyHistoryView
+                    {
+//                        Name = string.Format("CompanyHistoryUserControl{0}", trackItem.Company.StockCode),
+                        DataContext = companyHistoryViewModel
+                    }, trackItem.Company.Symbol);
                     companyHistoryViewModel.LoadData();
                     MenuCommandObjects.Add(menuCommandObject);
                     CurrentTab = menuCommandObject;

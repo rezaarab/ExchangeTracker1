@@ -26,9 +26,47 @@ namespace ExchangeTracker.Presentation.ViewModels
         public OnlineTrackItemsViewModel()
         {
             CommandObjects.Add(new CommandObject(RefreshRowCommand, "RefreshRow"));
-//            CommandObjects.Add(new CommandObject(RefreshStaticDataCommand, "RefreshStaticDataCommand"));
+            //            CommandObjects.Add(new CommandObject(RefreshStaticDataCommand, "RefreshStaticDataCommand"));
             LoadInitialData();
-            _timer.Elapsed += (s, e) => UpdateItems();
+            _timer.Elapsed += (s, e) => { if (AutoRefresh) UpdateItems(); };
+        }
+
+        public ObservableCollection<SymbolGroup> SymbolGroups
+        {
+            get { return _symbolGroups; }
+            set
+            {
+                var temp = value.FirstOrDefault(p => p != null && SelectedSymbolGroup != null && p.Caption == SelectedSymbolGroup.Caption);
+                Set(() => SymbolGroups, ref _symbolGroups, value);
+                SelectedSymbolGroup = temp;
+            }
+        }
+
+        public SymbolGroup SelectedSymbolGroup
+        {
+            get { return _selectedSymbolGroup; }
+            set
+            {
+                Set(() => SelectedSymbolGroup, ref _selectedSymbolGroup, value);
+                SetGroupFilter();
+            }
+        }
+
+        private void SetGroupFilter()
+        {
+            if (SelectedSymbolGroup != null)
+                TrackItems =
+                    new ObservableCollection<TrackItem>(
+                        OrginalTrackItems.Where(
+                            p => SelectedSymbolGroup.Companies.Select(q => q.StockId).Contains(p.Company.StockId)));
+            else
+                TrackItems = OrginalTrackItems;
+        }
+
+        public bool AutoRefresh
+        {
+            get { return _autoRefresh; }
+            set { Set(() => AutoRefresh, ref _autoRefresh, value); }
         }
 
         private List<Task> updateListTasks;
@@ -37,12 +75,12 @@ namespace ExchangeTracker.Presentation.ViewModels
             get { return string.Empty; }
         }
 
-        readonly Timer _timer = new Timer(30000);
+        readonly Timer _timer = new Timer(60000);
         private void LoadInitialData()
         {
             Task.Factory.StartNew(() =>
             {
-                TrackItems = new ObservableCollection<TrackItem>(StockService.GetInitDataCompanies());
+                OrginalTrackItems = TrackItems = new ObservableCollection<TrackItem>(StockService.GetInitDataCompanies());
             }).ContinueWith(p => { UpdateItems(); _timer.Start(); });
         }
 
@@ -50,6 +88,12 @@ namespace ExchangeTracker.Presentation.ViewModels
         {
             get { return _trackItems; }
             set { Set(() => TrackItems, ref _trackItems, value); }
+        }
+
+        public ObservableCollection<TrackItem> OrginalTrackItems
+        {
+            get { return _orginalTrackItems; }
+            set { Set(() => OrginalTrackItems, ref _orginalTrackItems, value); }
         }
 
         public TrackItem CurrentTrackItem
@@ -62,6 +106,10 @@ namespace ExchangeTracker.Presentation.ViewModels
         private RelayCommand _refreshStaticDataCommand;
         private ObservableCollection<TrackItem> _trackItems;
         private TrackItem _currentTrackItem;
+        private bool _autoRefresh = true;
+        private ObservableCollection<SymbolGroup> _symbolGroups;
+        private SymbolGroup _selectedSymbolGroup;
+        private ObservableCollection<TrackItem> _orginalTrackItems;
 
         public RelayCommand RefreshRowCommand
         {

@@ -34,7 +34,7 @@ namespace ExchangeTracker.Presentation.ViewModels
             _timer.Elapsed += (s, e) => StockService.RefreshTrackItem(TrackItem);
         }
 
-        readonly Timer _timer = new Timer(5000);
+        readonly Timer _timer = new Timer(10000);
         public void LoadData()
         {
             Task.Factory.StartNew(() =>

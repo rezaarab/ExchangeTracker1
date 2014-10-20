@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 
 namespace ExchangeTracker.Domain
 {
+    [Serializable]
     public abstract class Entity : Model
     {
         private Guid _id;

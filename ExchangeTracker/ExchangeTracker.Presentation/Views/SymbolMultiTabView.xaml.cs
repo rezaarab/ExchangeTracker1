@@ -24,7 +24,15 @@ namespace ExchangeTracker.Presentation.Views
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            ViewModel.OnClose((sender as FrameworkElement).DataContext as MenuCommandObject);
+            var menuCommandObject = (sender as FrameworkElement).DataContext as MenuCommandObject;
+            (menuCommandObject.Navigator as UserControlBase).OnUnloaded();
+            ViewModel.OnClose(menuCommandObject);
+        }
+
+        public override void OnUnloaded()
+        {
+            base.OnUnloaded();
+
         }
     }
 }

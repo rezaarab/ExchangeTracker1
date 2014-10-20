@@ -1,0 +1,68 @@
+﻿<common:UserControlBase x:Class="ExchangeTracker.Presentation.Views.SymbolGroupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                                        xmlns:common="clr-namespace:ExchangeTracker.Presentation.Common"
+                                        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+                                        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+                                        DataContext="{Binding Source={StaticResource Locator}, Path=SymbolGroupViewModel}"
+                                        mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+  <UserControl.Resources>
+    <DataTemplate x:Key="SymbolGroupCelltemplate">
+      <ListBox ItemsSource="{Binding RowData.Row.Companies}" DisplayMemberPath="Symbol" KeyUp="UIElement_OnKeyUp">
+      </ListBox>
+    </DataTemplate>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"></RowDefinition>
+      <RowDefinition Height="*"></RowDefinition>
+      <RowDefinition Height="20"></RowDefinition>
+      <RowDefinition Height="*"></RowDefinition>
+    </Grid.RowDefinitions>
+    <common:LayoutItem Label="گروه جدید">
+      <TextBox Text="{Binding NewGroupCaption,UpdateSourceTrigger=PropertyChanged}" Width="200" HorizontalAlignment="Left"/>
+    </common:LayoutItem>
+    <dxg:GridControl Grid.Row="1" ItemsSource="{Binding SymbolGroups}" SelectionMode="Row"  
+                     SelectedItem="{Binding SelectedSymbolGroup}" KeyUp="GridControl_OnKeyUp">
+      <dxg:GridControl.Columns>
+        <dxg:GridColumn Header="گروه" FieldName="Caption"/>
+        <dxg:GridColumn Header="نماد های گروه" CellTemplate="{StaticResource SymbolGroupCelltemplate}"/>
+      </dxg:GridControl.Columns>
+      <dxg:GridControl.View>
+        <dxg:TableView x:Name="View" ShowGroupedColumns="False" AllowGrouping="False" ShowGroupPanel="False"
+                       AllowEditing="False">
+          <dxg:TableView.HeaderTemplate>
+            <DataTemplate>
+              <TextBlock Text="گروه نماد ها"></TextBlock>
+            </DataTemplate>
+          </dxg:TableView.HeaderTemplate>
+        </dxg:TableView>
+      </dxg:GridControl.View>
+    </dxg:GridControl>
+
+    <dxg:GridControl Grid.Row="3" ItemsSource="{Binding Companies}" SelectionMode="Row" SelectedItem="{Binding SelectedCompany}">
+      <dxg:GridControl.Columns>
+        <dxg:GridColumn Header="نماد" FieldName="Symbol"/>
+      </dxg:GridControl.Columns>
+      <dxg:GridControl.View>
+        <dxg:TableView ShowGroupedColumns="False" AllowGrouping="False" ShowGroupPanel="False"
+                       AllowEditing="False" ShowAutoFilterRow="True">
+          <dxmvvm:Interaction.Triggers>
+            <dxmvvm:EventToCommand EventName="RowDoubleClick"
+                                   Command="{Binding AddCompanyCommand}"
+                                   PassEventArgsToCommand="False">
+            </dxmvvm:EventToCommand>
+          </dxmvvm:Interaction.Triggers>
+          <dxg:TableView.HeaderTemplate>
+            <DataTemplate>
+              <TextBlock Text="لیست انتخاب نماد ها"></TextBlock>
+            </DataTemplate>
+          </dxg:TableView.HeaderTemplate>
+        </dxg:TableView>
+      </dxg:GridControl.View>
+    </dxg:GridControl>
+  </Grid>
+</common:UserControlBase>
