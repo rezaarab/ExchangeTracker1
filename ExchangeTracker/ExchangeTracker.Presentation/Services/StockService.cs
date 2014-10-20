@@ -164,29 +164,46 @@ namespace ExchangeTracker.Presentation.Services
                 SellRealCount = p.GetSafe(3).ToType<decimal>(),
             }).ToArray();
             var histories = ReadAllText("http://www.tsetmc.com/tsev2/data/InstTradeHistory.aspx?i=" + trackItem.Company.StockId + "&Top=" + 999 + "&A=1");
-            histories.Split(new[] {';'}).Select(p => p.Split(new[] {'@'}));
-//            var xmlDoc = new XmlDocument();
-//            xmlDoc.LoadXml(histories);
-//            var nodes = xmlDoc.SelectNodes("rows/row");
-//            foreach (XmlNode node in nodes)
-//            {
-//                var date = node.Attributes["id"].Value;
-//                var pDate = new PersianDate(DateTime.Parse(String.Format("{0}/{1}/{2}",
-//                    date.Substring(0, 4),
-//                    date.Substring(4, 2),
-//                    date.Substring(6, 2)))).ToString("");
-//                var track = trackItems.FirstOrDefault(p => p.LastTransactionDateTime == pDate);
-//                if (track != null)
-//                {
-//                    track.FinalPrice = node.ChildNodes[5].InnerText.ToType<decimal>();//4
-//                    track.YesterdayPrice = node.ChildNodes[10].InnerText.ToType<decimal>();//9
-//                    track.LastTransactionPrice = node.ChildNodes[8].InnerText.ToType<decimal>();//7
-//                }
-//                else
-//                {
-//
-//                }
-//            }
+            var nodes = histories.Split(new[] { ';' }).Select(p => p.Split(new[] { '@' })).ToArray();
+            var telorance = nodes.GroupBy(p => p.Count()).Max(p => p.Key);
+            foreach (var node in nodes.Where(p => p.Count() == telorance).ToArray())
+            {
+                var date = node[0];
+                var pDate = new PersianDate(DateTime.Parse(String.Format("{0}/{1}/{2}",
+                    date.Substring(0, 4),
+                    date.Substring(4, 2),
+                    date.Substring(6, 2)))).ToString("");
+                var track = trackItems.FirstOrDefault(p => p.LastTransactionDateTime == pDate);
+                if (track != null)
+                {
+                    track.FinalPrice = node[3].ToType<decimal>();
+                    track.YesterdayPrice = node[6].ToType<decimal>();
+                    track.LastTransactionPrice = node[4].ToType<decimal>();
+                }
+            }
+
+            //            var xmlDoc = new XmlDocument();
+            //            xmlDoc.LoadXml(histories);
+            //            var nodes = xmlDoc.SelectNodes("rows/row");
+            //            foreach (XmlNode node in nodes)
+            //            {
+            //                var date = node.Attributes["id"].Value;
+            //                var pDate = new PersianDate(DateTime.Parse(String.Format("{0}/{1}/{2}",
+            //                    date.Substring(0, 4),
+            //                    date.Substring(4, 2),
+            //                    date.Substring(6, 2)))).ToString("");
+            //                var track = trackItems.FirstOrDefault(p => p.LastTransactionDateTime == pDate);
+            //                if (track != null)
+            //                {
+            //                    track.FinalPrice = node.ChildNodes[5].InnerText.ToType<decimal>();//4
+            //                    track.YesterdayPrice = node.ChildNodes[10].InnerText.ToType<decimal>();//9
+            //                    track.LastTransactionPrice = node.ChildNodes[8].InnerText.ToType<decimal>();//7
+            //                }
+            //                else
+            //                {
+            //
+            //                }
+            //            }
             return trackItems.ToArray();
         }
 
