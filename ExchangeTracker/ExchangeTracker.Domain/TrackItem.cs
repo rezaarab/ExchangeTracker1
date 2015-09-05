@@ -33,12 +33,14 @@ namespace ExchangeTracker.Domain
         private decimal _baseVolume;
         private decimal _floatingStocks;
         private decimal _monthVolumeAvg;
-        private string _lastTransactionDateTime;
+        private string _lastTransactionTime;
         private string _statusId;
         private decimal _eps;
         private decimal _pe;
         //        private float _groupPe;
-        private string _registerDateTime;
+        private string _registerDateTimeStr;
+        private DateTime _registerDateTime;
+        private DateTime _lastTransactionDateTime;
 
         public Company Company
         {
@@ -331,10 +333,10 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// زمان آخرین معامله
         /// </summary>
-        public string LastTransactionDateTime
+        public string LastTransactionTime
         {
-            get { return _lastTransactionDateTime; }
-            set { SetProperty(ref  _lastTransactionDateTime, value); }
+            get { return _lastTransactionTime; }
+            set { SetProperty(ref  _lastTransactionTime, value); }
         }
 
         /// <summary>
@@ -376,10 +378,25 @@ namespace ExchangeTracker.Domain
         /// <summary>
         /// زمان ثبت آیتم
         /// </summary>
-        public string RegisterDateTime
+        public string RegisterDateTimeStr
+        {
+            get { return _registerDateTimeStr; }
+            set { SetProperty(ref _registerDateTimeStr, value); }
+        }
+
+        /// <summary>
+        /// زمان ثبت آیتم
+        /// </summary>
+        public DateTime RegisterDateTime
         {
             get { return _registerDateTime; }
             set { SetProperty(ref _registerDateTime, value); }
+        }
+
+        public DateTime LastTransactionDateTime
+        {
+            get { return _lastTransactionDateTime; }
+            set { SetProperty(ref _lastTransactionDateTime, value); }
         }
     }
 }
