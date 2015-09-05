@@ -31,7 +31,7 @@
     <InstallUrl>http://exchangetracker.codeplex.com/releases/clickonce/</InstallUrl>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>11</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -60,7 +60,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>3B366B7EC16FC771CFC3407F93067008A7BB9E78</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>186BCE0D78F1A0A4B3661EBA22787034E45C4A83</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -71,11 +71,26 @@
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>ExchangeTracker.Presentation_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DevExpress.Data.v13.1, Version=13.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Core.v13.1, Version=13.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Grid.v13.1, Version=13.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.Xpf.Grid.v13.1.Core, Version=13.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Printing.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Data.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Mvvm.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Core.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Printing.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Grid.v15.1, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.Xpf.Grid.v15.1.Core, Version=15.1.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServerCompact">
+      <HintPath>..\packages\EntityFramework.SqlServerCompact.6.1.3\lib\net45\EntityFramework.SqlServerCompact.dll</HintPath>
+    </Reference>
     <Reference Include="FarsiLibrary.FX.Win, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ThirdParty\FarsiLibrary.FX.Win.dll</HintPath>
@@ -99,6 +114,17 @@
       <HintPath>..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.4.3.31.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -122,10 +148,33 @@
     <Compile Include="Common\GridHelper.cs" />
     <Compile Include="Common\MyExtentions.cs" />
     <Compile Include="Common\SerializeHelper.cs" />
+    <Compile Include="ExchangeDbCe.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExchangeDbCe.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ExchangeDbCe.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExchangeDbCe.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ExchangeDbCe.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExchangeDbCe.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\StaticReference.cs" />
+    <Compile Include="Model\TrackItemModel.cs" />
+    <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\StockService.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TrackItemModel.cs">
+      <DependentUpon>ExchangeDbCe.tt</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\CompanyHistoryViewModel.cs" />
+    <Compile Include="ViewModels\SettingViewModel.cs" />
+    <Compile Include="ViewModels\TrackItemModelsViewModel.cs" />
     <Compile Include="ViewModels\SymbolGroupViewModel.cs" />
     <Compile Include="ViewModels\SymbolMultiTabViewModel.cs" />
     <Compile Include="ViewModels\OnlineTrackItemsViewModel.cs" />
@@ -137,6 +186,12 @@
     </Compile>
     <Compile Include="Views\LoginView.xaml.cs">
       <DependentUpon>LoginView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingView.xaml.cs">
+      <DependentUpon>SettingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TrackItemModelsView.xaml.cs">
+      <DependentUpon>TrackItemModelsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SymbolGroupView.xaml.cs">
       <DependentUpon>SymbolGroupView.xaml</DependentUpon>
@@ -166,6 +221,14 @@
     <Page Include="Views\LoginView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TrackItemModelsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\SymbolGroupView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -246,6 +309,24 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EntityDeploy Include="ExchangeDbCe.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ExchangeDbCe.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ExchangeDbCe.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExchangeDbCe.Context.cs</LastGenOutput>
+      <DependentUpon>ExchangeDbCe.edmx</DependentUpon>
+    </None>
+    <None Include="ExchangeDbCe.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExchangeDbCe.cs</LastGenOutput>
+      <DependentUpon>ExchangeDbCe.edmx</DependentUpon>
+    </None>
+    <None Include="ExchangeDbCeedmx.diagram">
+      <DependentUpon>ExchangeDbCe.edmx</DependentUpon>
+    </None>
+    <None Include="ExchangeTracker.Presentation_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -261,7 +342,9 @@
     <Resource Include="Resources\P Yekan.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExchangeTracker.Domain\ExchangeTracker.Domain.csproj">
@@ -270,6 +353,35 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Assets\ExchangeDbCe.sdf" />
+    <None Include="..\Database Explorer\sqlceca40.dll">
+      <Link>sqlceca40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Database Explorer\sqlcecompact40.dll">
+      <Link>sqlcecompact40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Database Explorer\sqlceer40EN.dll">
+      <Link>sqlceer40EN.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Database Explorer\sqlceme40.dll">
+      <Link>sqlceme40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Database Explorer\sqlceoledb40.dll">
+      <Link>sqlceoledb40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Database Explorer\sqlceqp40.dll">
+      <Link>sqlceqp40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Database Explorer\sqlcese40.dll">
+      <Link>sqlcese40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="HTMLPage1.html" />
     <Resource Include="Assets\1403270927_Close.png" />
     <Content Include="Assets\MarketWatchPlus.txt">
@@ -284,11 +396,9 @@
     <Resource Include="Assets\Background1.jpg" />
     <Resource Include="Assets\Icon1.ico" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PublishFile Include="DevExpress.Data.v13.1">
+    <PublishFile Include="DevExpress.Data.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -298,7 +408,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Office.v13.1.Core">
+    <PublishFile Include="DevExpress.Mvvm.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -308,7 +418,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Printing.v13.1.Core">
+    <PublishFile Include="DevExpress.Office.v15.1.Core">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -318,7 +428,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.RichEdit.v13.1.Core">
+    <PublishFile Include="DevExpress.Printing.v15.1.Core">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -328,7 +438,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Sparkline.v13.1.Core">
+    <PublishFile Include="DevExpress.RichEdit.v15.1.Core">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -338,7 +448,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Utils.v13.1">
+    <PublishFile Include="DevExpress.Sparkline.v15.1.Core">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -348,7 +458,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Core.v13.1">
+    <PublishFile Include="DevExpress.Utils.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -358,7 +468,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Docking.v13.1">
+    <PublishFile Include="DevExpress.Xpf.Core.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -368,7 +478,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Grid.v13.1">
+    <PublishFile Include="DevExpress.Xpf.Docking.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -378,7 +488,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Grid.v13.1.Core">
+    <PublishFile Include="DevExpress.Xpf.DocumentViewer.v15.1.Core">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -388,7 +498,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Grid.v13.1.Extensions">
+    <PublishFile Include="DevExpress.Xpf.Grid.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -398,7 +508,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Layout.v13.1.Core">
+    <PublishFile Include="DevExpress.Xpf.Grid.v15.1.Core">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -408,7 +518,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Mvvm.v13.1">
+    <PublishFile Include="DevExpress.Xpf.Grid.v15.1.Extensions">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -418,7 +528,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Printing.v13.1">
+    <PublishFile Include="DevExpress.Xpf.Layout.v15.1.Core">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -428,7 +538,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.Xpf.Ribbon.v13.1">
+    <PublishFile Include="DevExpress.Xpf.Mvvm.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -438,7 +548,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.XtraBars.v13.1">
+    <PublishFile Include="DevExpress.Xpf.Printing.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -448,7 +558,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.XtraEditors.v13.1">
+    <PublishFile Include="DevExpress.Xpf.Ribbon.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -458,7 +568,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.XtraGrid.v13.1">
+    <PublishFile Include="DevExpress.XtraBars.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -468,7 +578,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.XtraLayout.v13.1">
+    <PublishFile Include="DevExpress.XtraEditors.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -478,7 +588,7 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.XtraPrinting.v13.1">
+    <PublishFile Include="DevExpress.XtraGrid.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -488,7 +598,27 @@
       </TargetPath>
       <FileType>Assembly</FileType>
     </PublishFile>
-    <PublishFile Include="DevExpress.XtraTreeList.v13.1">
+    <PublishFile Include="DevExpress.XtraLayout.v15.1">
+      <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="DevExpress.XtraPrinting.v15.1">
+      <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="DevExpress.XtraTreeList.v15.1">
       <Visible>False</Visible>
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
@@ -516,10 +646,16 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-    </PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

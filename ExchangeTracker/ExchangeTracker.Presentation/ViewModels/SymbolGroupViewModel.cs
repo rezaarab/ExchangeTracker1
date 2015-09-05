@@ -16,10 +16,11 @@ namespace ExchangeTracker.Presentation.ViewModels
     {
         public SymbolGroupViewModel()
         {
-            SymbolGroups = LoadGroups();
+            Task.Factory.StartNew(() => { SymbolGroups = LoadGroups(); });
             CommandObjects.Add(new CommandObject(AddGroupCommand, "AddGroup"));
             CommandObjects.Add(new CommandObject(SaveCommand, "Save"));
-            Companies = StockService.GetInitDataCompanies().Select(p => p.Company).ToList();
+            Task.Factory.StartNew(
+                () => { Companies = StockService.GetInitDataCompanies().Select(p => p.Company).ToList(); });
         }
 
         private ObservableCollection<SymbolGroup> LoadGroups()

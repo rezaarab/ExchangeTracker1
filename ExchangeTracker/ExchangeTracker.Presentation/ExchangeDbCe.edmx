@@ -1,0 +1,100 @@
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+<!-- EF Runtime content -->
+<edmx:Runtime>
+<!-- SSDL content -->
+<edmx:StorageModels>
+<Schema Namespace="ExchangeDbCeModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="ExchangeDbCeModelStoreContainer">
+    <EntitySet Name="TrackItemModel" EntityType="ExchangeDbCeModel.Store.TrackItemModel" store:Type="Tables" />
+  </EntityContainer>
+  <EntityType Name="TrackItemModel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="BuyLegalCount" Type="numeric" Nullable="false" />
+    <Property Name="BuyLegalVolume" Type="numeric" Nullable="false" />
+    <Property Name="BuyRealCount" Type="numeric" Nullable="false" />
+    <Property Name="BuyRealVolume" Type="numeric" Nullable="false" />
+    <Property Name="FinalPrice" Type="numeric" Nullable="false" />
+    <Property Name="LastTransactionPrice" Type="numeric" Nullable="false" />
+    <Property Name="RegisterDateTime" Type="datetime" Nullable="false" />
+    <Property Name="SellLegalCount" Type="numeric" Nullable="false" />
+    <Property Name="SellLegalVolume" Type="numeric" Nullable="false" />
+    <Property Name="SellRealCount" Type="numeric" Nullable="false" />
+    <Property Name="SellRealVolume" Type="numeric" Nullable="false" />
+    <Property Name="StockId" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="TransactionCount" Type="numeric" Nullable="false" />
+    <Property Name="TransactionValue" Type="numeric" Nullable="false" />
+    <Property Name="TransactionVolume" Type="numeric" Nullable="false" />
+    <Property Name="LastTransactionDateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+</Schema>
+</edmx:StorageModels>
+<!-- CSDL content -->
+<edmx:ConceptualModels>
+<Schema Namespace="ExchangeDbCeModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="ExchangeDbCeEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="TrackItemModel" EntityType="ExchangeDbCeModel.TrackItemModel" />
+  </EntityContainer>
+  <EntityType Name="TrackItemModel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="BuyLegalCount" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="BuyLegalVolume" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="BuyRealCount" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="BuyRealVolume" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="FinalPrice" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="LastTransactionPrice" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="RegisterDateTime" Type="DateTime" Nullable="false" />
+    <Property Name="SellLegalCount" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="SellLegalVolume" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="SellRealCount" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="SellRealVolume" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="StockId" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="TransactionCount" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="TransactionValue" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="TransactionVolume" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+    <Property Name="LastTransactionDateTime" Type="DateTime" Nullable="false" />
+  </EntityType>
+</Schema>
+</edmx:ConceptualModels>
+<!-- C-S mapping content -->
+<edmx:Mappings>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ExchangeDbCeModelStoreContainer" CdmEntityContainer="ExchangeDbCeEntities">
+    <EntitySetMapping Name="TrackItemModel">
+      <EntityTypeMapping TypeName="ExchangeDbCeModel.TrackItemModel">
+        <MappingFragment StoreEntitySet="TrackItemModel">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="BuyLegalCount" ColumnName="BuyLegalCount" />
+          <ScalarProperty Name="BuyLegalVolume" ColumnName="BuyLegalVolume" />
+          <ScalarProperty Name="BuyRealCount" ColumnName="BuyRealCount" />
+          <ScalarProperty Name="BuyRealVolume" ColumnName="BuyRealVolume" />
+          <ScalarProperty Name="FinalPrice" ColumnName="FinalPrice" />
+          <ScalarProperty Name="LastTransactionPrice" ColumnName="LastTransactionPrice" />
+          <ScalarProperty Name="RegisterDateTime" ColumnName="RegisterDateTime" />
+          <ScalarProperty Name="SellLegalCount" ColumnName="SellLegalCount" />
+          <ScalarProperty Name="SellLegalVolume" ColumnName="SellLegalVolume" />
+          <ScalarProperty Name="SellRealCount" ColumnName="SellRealCount" />
+          <ScalarProperty Name="SellRealVolume" ColumnName="SellRealVolume" />
+          <ScalarProperty Name="StockId" ColumnName="StockId" />
+          <ScalarProperty Name="TransactionCount" ColumnName="TransactionCount" />
+          <ScalarProperty Name="TransactionValue" ColumnName="TransactionValue" />
+          <ScalarProperty Name="TransactionVolume" ColumnName="TransactionVolume" />
+          <ScalarProperty Name="LastTransactionDateTime" ColumnName="LastTransactionDateTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
+</edmx:Mappings>
+</edmx:Runtime>
+<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+<edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+<Connection><DesignerInfoPropertySet><DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" /></DesignerInfoPropertySet></Connection>
+<edmx:Options><DesignerInfoPropertySet><DesignerProperty Name="ValidateOnBuild" Value="True" /><DesignerProperty Name="EnablePluralization" Value="False" /><DesignerProperty Name="IncludeForeignKeysInModel" Value="True" /><DesignerProperty Name="UseLegacyProvider" Value="False" /><DesignerProperty Name="CodeGenerationStrategy" Value="None" /></DesignerInfoPropertySet></edmx:Options>
+<edmx:Diagrams />
+</edmx:Designer></edmx:Edmx>

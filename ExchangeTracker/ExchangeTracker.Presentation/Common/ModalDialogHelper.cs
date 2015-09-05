@@ -9,19 +9,17 @@ namespace ExchangeTracker.Presentation.Common
         static readonly Stack<ModalDialog> stack = new Stack<ModalDialog>();
         public static void Show(MenuCommandObject menuCommandObject, bool isMaximaize = false)
         {
-            var userControlBase = menuCommandObject.Navigator as UserControlBase;
-            var myViewModelBase = userControlBase != null ? userControlBase.DataContext as MyViewModelBase : null;
             var dialog = new ModalDialog
             {
                 Content = menuCommandObject,
-                ShowCloseButton = myViewModelBase != null && (myViewModelBase.CommandObjects.Any(p => p.Key == "Cancel" || p.Key == "Close")),
-                ShowInTaskbar = false,
+                ShowCloseButton = true,
+                ShowInTaskbar = true,
                 ShowIconOnTitleBar = false,
                 ShowMinButton = false,
                 ShowMaxRestoreButton = false,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 WindowState = isMaximaize ? WindowState.Maximized : WindowState.Normal,
-                ResizeMode = ResizeMode.NoResize,
+                ResizeMode = ResizeMode.CanResize,
                 Owner = stack.FirstOrDefault(p => p.IsActive) ?? Application.Current.MainWindow,
             };
             menuCommandObject.Navigator.NavigateEnter();

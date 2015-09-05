@@ -36,7 +36,7 @@ namespace ExchangeTracker.Presentation.ViewModels
             get { return _symbolGroups; }
             set
             {
-                var temp = value.FirstOrDefault(p => p != null && SelectedSymbolGroup != null && p.Caption == SelectedSymbolGroup.Caption);
+                var temp = value == null ? null : value.FirstOrDefault(p => p != null && SelectedSymbolGroup != null && p.Caption == SelectedSymbolGroup.Caption);
                 Set(() => SymbolGroups, ref _symbolGroups, value);
                 SelectedSymbolGroup = temp;
             }
@@ -138,7 +138,7 @@ namespace ExchangeTracker.Presentation.ViewModels
 
         private void UpdateItems()
         {
-            if (updateListTasks == null || updateListTasks.All(p => p.IsCompleted))
+            if (TrackItems != null && (updateListTasks == null || updateListTasks.All(p => p.IsCompleted)))
                 updateListTasks = StockService.AsyncRefreshTrackItems(TrackItems);
         }
 

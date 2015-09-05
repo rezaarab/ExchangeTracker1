@@ -33,7 +33,7 @@
       </dxg:GridControl.Columns>
       <dxg:GridControl.View>
         <dxg:TableView x:Name="View" ShowGroupedColumns="False" AllowGrouping="False" ShowGroupPanel="False"
-                       AllowEditing="False">
+                       AllowEditing="False"  UseLightweightTemplates="None">
           <dxg:TableView.HeaderTemplate>
             <DataTemplate>
               <TextBlock Text="گروه نماد ها"></TextBlock>
@@ -49,7 +49,7 @@
       </dxg:GridControl.Columns>
       <dxg:GridControl.View>
         <dxg:TableView ShowGroupedColumns="False" AllowGrouping="False" ShowGroupPanel="False"
-                       AllowEditing="False" ShowAutoFilterRow="True">
+                       AllowEditing="False" ShowAutoFilterRow="True"  UseLightweightTemplates="None">
           <dxmvvm:Interaction.Triggers>
             <dxmvvm:EventToCommand EventName="RowDoubleClick"
                                    Command="{Binding AddCompanyCommand}"

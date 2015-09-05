@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace ExchangeTracker.Presentation.Common
 {
@@ -18,12 +19,14 @@ namespace ExchangeTracker.Presentation.Common
         }
     }
 
-    public class PercentBooleanConverter : IValueConverter
+    public class ValueSignToBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var v = double.Parse(value.ToString());
-            return v > 0;
+            double result;
+            if (double.TryParse(value != null ? value.ToString() : string.Empty, out result))
+                return result > 0;
+            return true;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -48,6 +51,29 @@ namespace ExchangeTracker.Presentation.Common
                 default:
                     return val;
             }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class TimeSpanToBackGround : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is TimeSpan)
+            {
+                var item = (TimeSpan)value;
+                if (item.Seconds == 0)// data updated
+                    return Brushes.CadetBlue;
+                if (item.Seconds == 1)//last record
+                    return Brushes.Tomato;
+                if (item.Seconds == 2)//empty record
+                    return Brushes.Transparent;
+            }
+            return Brushes.Transparent;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -15,6 +16,7 @@ using DevExpress.Data.PLinq.Helpers;
 using DevExpress.Xpf.Editors.Helpers;
 using ExchangeTracker.Domain;
 using ExchangeTracker.Presentation.Common;
+using ExchangeTracker.Presentation.Model;
 using ExchangeTracker.Presentation.ViewModels;
 using FarsiLibrary.FX.Utils;
 using HtmlAgilityPack;
@@ -26,6 +28,7 @@ namespace ExchangeTracker.Presentation.Services
     {
         static StockService()
         {
+            _trackItemHistories = new ConcurrentBag<TrackItemModel>(DataService.GetTodaySavedItems());
             OfflineStaticData = File.Exists(StaticDataFilePath) ? File.ReadAllLines(StaticDataFilePath).ToList() : Enumerable.Empty<string>().ToList();
         }
 
@@ -38,6 +41,8 @@ namespace ExchangeTracker.Presentation.Services
         }
         static readonly object Lck = new object();
         private static List<TrackItem> _initDataCompanies;
+        private static readonly ConcurrentBag<TrackItemModel> _trackItemHistories = new ConcurrentBag<TrackItemModel>();
+
         public static IEnumerable<TrackItem> GetInitDataCompanies()
         {
             lock (Lck)
@@ -150,7 +155,7 @@ namespace ExchangeTracker.Presentation.Services
                     Cid = trackItem.Company.Cid,
                     GroupId = trackItem.Company.GroupId,
                 },
-                LastTransactionDateTime = new PersianDate(DateTime.Parse(String.Format("{0}/{1}/{2}",
+                LastTransactionTime = new PersianDate(DateTime.Parse(String.Format("{0}/{1}/{2}",
                     p.GetSafe(0).Substring(0, 4),
                     p.GetSafe(0).Substring(4, 2),
                     p.GetSafe(0).Substring(6, 2)))).ToString(""),
@@ -173,7 +178,7 @@ namespace ExchangeTracker.Presentation.Services
                     date.Substring(0, 4),
                     date.Substring(4, 2),
                     date.Substring(6, 2)))).ToString("");
-                var track = trackItems.FirstOrDefault(p => p.LastTransactionDateTime == pDate);
+                var track = trackItems.FirstOrDefault(p => p.LastTransactionTime == pDate);
                 if (track != null)
                 {
                     track.FinalPrice = node[3].ToType<decimal>();
@@ -240,13 +245,21 @@ namespace ExchangeTracker.Presentation.Services
                 if (String.IsNullOrEmpty(staticValues))
                 {
                     staticValues = GetOnlineStaticValues(item.Company.StockId);
-                    OfflineStaticData.Add(String.Format("{0},{1}", item.Company.StockId, staticValues));
+                    AddToOfflineData(String.Format("{0},{1}", item.Company.StockId, staticValues));
                 }
                 var staticData = String.IsNullOrEmpty(staticValues) ? null : staticValues.Split(',');
 
                 SetTrackItemValues(item, eData, oV, staticData);
             })).ToList();
             return tasks;
+        }
+
+        private static void AddToOfflineData(string value)
+        {
+            lock (Lck)
+            {
+                OfflineStaticData.Add(value);
+            }
         }
 
         public static void RefreshTrackItem(TrackItem item)
@@ -262,7 +275,7 @@ namespace ExchangeTracker.Presentation.Services
             if (String.IsNullOrEmpty(staticValues))
             {
                 staticValues = GetOnlineStaticValues(item.Company.StockId);
-                OfflineStaticData.Add(String.Format("{0},{1}", item.Company.StockId, staticValues));
+                AddToOfflineData(String.Format("{0},{1}", item.Company.StockId, staticValues));
             }
             var staticData = String.IsNullOrEmpty(staticValues) ? null : staticValues.Split(',');
 
@@ -274,14 +287,16 @@ namespace ExchangeTracker.Presentation.Services
             var staticValues = GetOnlineStaticValues(stockId);
             var index = OfflineStaticData.FindIndex(p => p.Split(new[] { ',' })[0] == stockId);
             if (index < 0)
-                OfflineStaticData.Add(String.Format("{0},{1}", stockId, staticValues));
+                AddToOfflineData(String.Format("{0},{1}", stockId, staticValues));
             else
                 OfflineStaticData[index] = String.Format("{0},{1}", stockId, staticValues);
         }
 
         private static void SetTrackItemValues(TrackItem item, string[] eData, string[] oV, string[] staticData)
         {
-            item.RegisterDateTime = PersianDateConverter.ToPersianDate(DateTime.Now).ToString("G");
+            var now = DateTime.Now;
+            item.RegisterDateTime = now;
+            item.RegisterDateTimeStr = PersianDateConverter.ToPersianDate(now).ToString("G");
             item.FloatingStocks = item.Company.DefaultFloatingStocks;
 
             if (eData != null && eData.Count() > 8)
@@ -300,8 +315,11 @@ namespace ExchangeTracker.Presentation.Services
             {
                 item.FinalPrice = oV.GetSafe(3).ToType<decimal>();
                 //                item.FirstPrice = oV.GetSafe(4).ToType<decimal>();
-                item.LastTransactionDateTime = oV.GetSafe(0);
+                item.LastTransactionTime = oV.GetSafe(0);
                 item.LastTransactionPrice = oV.GetSafe(2).ToType<decimal>();
+                TimeSpan ouTimeSpan = TimeSpan.Zero;
+                TimeSpan.TryParse(oV.GetSafe(0), out ouTimeSpan);
+                item.LastTransactionDateTime = oV.GetSafe(12).Insert(4, "/").Insert(7, "/").ToType<DateTime>().Add(ouTimeSpan);
                 //                item.MarketValue = staticData != null && staticData.Count() > 1
                 //                    ? oV.GetSafe(3).ToType<decimal>() * staticData.GetSafe(1).ToType<decimal>()
                 //                    : 0;
@@ -317,6 +335,22 @@ namespace ExchangeTracker.Presentation.Services
             }
 
             SetStaticData(item, staticData);
+            AddToHistories(item);
+        }
+
+        public static ConcurrentBag<TrackItemModel> TrackItemHistories
+        {
+            get { return _trackItemHistories; }
+        }
+
+        private static void AddToHistories(TrackItem item)
+        {
+            var trackItemModel = StaticReference.FromTrackItem(item);
+            if (!TrackItemHistories.Any(p => p.Equals(trackItemModel)))
+            {
+                TrackItemHistories.Add(trackItemModel);
+                DataService.SaveTrackItem(trackItemModel);
+            }
         }
 
         private static void SetStaticData(TrackItem item, string[] staticData)
@@ -338,10 +372,13 @@ namespace ExchangeTracker.Presentation.Services
 
         public static string GetOfflineStaticValues(string stockId)
         {
-            var str = OfflineStaticData.FirstOrDefault(p => p.Split(new[] { ',' })[0] == stockId);
-            if (String.IsNullOrEmpty(str))
-                return str;
-            return String.Join(",", str.Split(new[] { ',' }).Skip(1));
+            lock (Lck)
+            {
+                var str = OfflineStaticData.FirstOrDefault(p => p.Split(new[] { ',' })[0] == stockId);
+                if (String.IsNullOrEmpty(str))
+                    return str;
+                return String.Join(",", str.Split(new[] { ',' }).Skip(1));
+            }
         }
 
         public static string GetOnlineStaticValues(string stockId)
@@ -388,7 +425,7 @@ namespace ExchangeTracker.Presentation.Services
         public static ObservableCollection<SymbolGroup> GetSymbolGroups()
         {
             return SerializeHelper.DeSerializeObject<ObservableCollection<SymbolGroup>>(
-                GetFileName());
+                GetFileName()) ?? new ObservableCollection<SymbolGroup>();
         }
     }
     public class GZipWebClient : WebClient

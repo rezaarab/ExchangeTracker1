@@ -13,139 +13,160 @@
              xmlns:themes="http://schemas.devexpress.com/winfx/2008/xaml/grid/themekeys"
              DispatcherUnhandledException="Application_DispatcherUnhandledException"
              >
-  <Application.Resources>
-    <ResourceDictionary>
-      <sys:Double x:Key="FontSize0X">14</sys:Double>
-      <sys:Double x:Key="FontSize1X">16</sys:Double>
-      <sys:Double x:Key="FontSize2X">18</sys:Double>
-      <FontFamily x:Key="FontFamily1">./Resources/#Mj_Liner XL</FontFamily>
-      <FontFamily x:Key="FontFamily2">./Resources/#Mj_Liner XL</FontFamily>
-      <FontFamily x:Key="FontFamily3">./Resources/#Mj_Beirut</FontFamily>
-      <FontFamily x:Key="FontFamilyReport">./Resources/#Mj_Liner XL</FontFamily>
-      <sys:Double x:Key="DefaultUnitWidth">300</sys:Double>
-      <sys:Double x:Key="KeepUnitWidth">150</sys:Double>
-      <sys:Double x:Key="DefaultUnitHeight">30</sys:Double>
-      <vm:MvvmViewModelLocator x:Key="Locator" />
-      <common:ResourceConverter x:Key="ResourceConverter" />
-      <sys:String x:Key="ReportList">گزارشات</sys:String>
-      <sys:String x:Key="New">جدید</sys:String>
-      <sys:String x:Key="Edit">ویرایش</sys:String>
-      <sys:String x:Key="Refresh">همه</sys:String>
-      <sys:String x:Key="RefreshRow">ردیف</sys:String>
-      <sys:String x:Key="RefreshStaticDataCommand">بروز</sys:String>
-      <sys:String x:Key="Calculate">محاسبه</sys:String>
-      <sys:String x:Key="Save">ذخیره</sys:String>
-      <sys:String x:Key="Close">بستن</sys:String>
-      <sys:String x:Key="Select">انتخاب</sys:String>
-      <sys:String x:Key="Print">چاپ</sys:String>
-      <sys:String x:Key="True">بلی</sys:String>
-      <sys:String x:Key="False">خیر</sys:String>
-      <sys:String x:Key="OnlineTrackItems">نمای بازار</sys:String>
-      <sys:String x:Key="SymbolGroup">گروه نماد</sys:String>
-      <sys:String x:Key="MainWindow">سیستم آنلاین نمای بازار</sys:String>
-      <sys:String x:Key="AddGroup">جدید</sys:String>
+    <Application.Resources>
+        <ResourceDictionary>
+            <sys:Double x:Key="FontSize0X">14</sys:Double>
+            <sys:Double x:Key="FontSize1X">16</sys:Double>
+            <sys:Double x:Key="FontSize2X">18</sys:Double>
+            <FontFamily x:Key="FontFamily1">./Resources/#Mj_Liner XL</FontFamily>
+            <FontFamily x:Key="FontFamily2">./Resources/#Mj_Liner XL</FontFamily>
+            <FontFamily x:Key="FontFamily3">./Resources/#Mj_Beirut</FontFamily>
+            <FontFamily x:Key="FontFamilyReport">./Resources/#Mj_Liner XL</FontFamily>
+            <sys:Double x:Key="DefaultUnitWidth">300</sys:Double>
+            <sys:Double x:Key="KeepUnitWidth">150</sys:Double>
+            <sys:Double x:Key="DefaultUnitHeight">30</sys:Double>
+            <vm:MvvmViewModelLocator x:Key="Locator" />
+            <common:ResourceConverter x:Key="ResourceConverter" />
+            <sys:String x:Key="ReportList">گزارشات</sys:String>
+            <sys:String x:Key="New">جدید</sys:String>
+            <sys:String x:Key="Edit">ویرایش</sys:String>
+            <sys:String x:Key="Refresh">همه</sys:String>
+            <sys:String x:Key="RefreshRow">ردیف</sys:String>
+            <sys:String x:Key="RefreshStaticDataCommand">بروز</sys:String>
+            <sys:String x:Key="Calculate">محاسبه</sys:String>
+            <sys:String x:Key="Save">ذخیره</sys:String>
+            <sys:String x:Key="Close">بستن</sys:String>
+            <sys:String x:Key="Select">انتخاب</sys:String>
+            <sys:String x:Key="Print">چاپ</sys:String>
+            <sys:String x:Key="True">بلی</sys:String>
+            <sys:String x:Key="False">خیر</sys:String>
+            <sys:String x:Key="OnlineTrackItems">نمای بازار</sys:String>
+            <sys:String x:Key="SymbolGroup">گروه نماد</sys:String>
+            <sys:String x:Key="Setting">تنظیمات</sys:String>
+            <sys:String x:Key="MainWindow">سیستم آنلاین نمای بازار</sys:String>
+            <sys:String x:Key="AddGroup">جدید</sys:String>
 
-      <Style x:Key="TabHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Style.Setters>
-          <Setter Property="FontFamily" Value="{StaticResource FontFamily3}"/>
-          <Setter Property="TextDecorations" Value="Underline"/>
-          <Setter Property="Margin" Value="1,1,32,1"/>
-        </Style.Setters>
-      </Style>
-
-      <Style TargetType="TextBlock" x:Key="TextBlockStyle" BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Style.Setters>
-          <Setter Property="FontFamily" Value="{StaticResource FontFamily1}"/>
-          <Setter Property="FontSize" Value="{StaticResource FontSize1X}"/>
-        </Style.Setters>
-      </Style>
-
-      <Style TargetType="common:LayoutItem">
-        <Style.Setters>
-          <Setter Property="FontFamily" Value="{StaticResource FontFamily1}"/>
-          <Setter Property="FontSize" Value="{StaticResource FontSize1X}"/>
-        </Style.Setters>
-      </Style>
-
-      <Style TargetType="TextBox" x:Key="TextBoxStyle" BasedOn="{StaticResource {x:Type TextBox}}">
-        <Style.Setters>
-          <Setter Property="FontFamily" Value="{StaticResource FontFamily1}"/>
-          <Setter Property="FontSize" Value="{StaticResource FontSize1X}"/>
-        </Style.Setters>
-      </Style>
-
-      <Style TargetType="ComboBox" x:Key="ComboBoxStyle" BasedOn="{StaticResource {x:Type ComboBox}}">
-        <Style.Setters>
-          <Setter Property="FontFamily" Value="{StaticResource FontFamily1}"/>
-          <Setter Property="FontSize" Value="{StaticResource FontSize1X}"/>
-        </Style.Setters>
-      </Style>
-
-      <Style TargetType="TextBlock" x:Key="TextBlockStyle2" BasedOn="{StaticResource {x:Type TextBlock}}">
-        <Style.Setters>
-          <Setter Property="FontFamily" Value="{StaticResource FontFamily2}"/>
-          <Setter Property="FontSize" Value="{StaticResource FontSize2X}"/>
-        </Style.Setters>
-      </Style>
-      <common:PercentBooleanConverter x:Key="PercentBooleanConverter" />
-      <Style x:Key="BuyColumnStyle" TargetType="dxg:GridColumn">
-        <Setter Property="CellStyle">
-          <Setter.Value>
-            <Style TargetType="dxg:CellContentPresenter"   BasedOn="{StaticResource {themes:GridRowThemeKey ResourceKey=CellStyle}}">
-              <Setter Property="Background" Value="#E0FFE0"/>
-              <Setter Property="Foreground" Value="#1F001F"/>
-              <Style.Triggers>
-                <Trigger Property="IsFocusedCell" Value="True">
-                  <Setter Property="Background" Value="White"/>
-                </Trigger>
-              </Style.Triggers>
+            <Style x:Key="TabHeaderStyle" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Style.Setters>
+                    <Setter Property="FontFamily" Value="{StaticResource FontFamily3}"/>
+                    <Setter Property="TextDecorations" Value="Underline"/>
+                    <Setter Property="Margin" Value="1,1,32,1"/>
+                </Style.Setters>
             </Style>
-          </Setter.Value>
-        </Setter>
-      </Style>
-      <Style x:Key="SellColumnStyle" TargetType="dxg:GridColumn">
-        <Setter Property="CellStyle">
-          <Setter.Value>
-            <Style TargetType="dxg:CellContentPresenter" BasedOn="{StaticResource {themes:GridRowThemeKey ResourceKey=CellStyle}}">
-              <Setter Property="Background" Value="#FFE0E0"/>
-              <Setter Property="Foreground" Value="#001F1F"/>
-              <Style.Triggers>
-                <Trigger Property="IsFocusedCell" Value="True">
-                  <Setter Property="Background" Value="White"/>
-                </Trigger>
-              </Style.Triggers>
-            </Style>
-          </Setter.Value>
-        </Setter>
-      </Style>
-      <common:StatusConverter x:Key="StatusConverter" />
 
-        <!--      <Style TargetType="{dxg:TableView}" BasedOn="{StaticResource {dxg:TableView}}">-->
-      <!--        <Style.Setters> RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBlock}}, Path=Text-->
-      <!--          <Setter Property="dxg:TableView.RuntimeLocalizationStrings">-->
-      <!--            <Setter.Value>-->
-      <!--              <dxg:GridRuntimeStringCollection>-->
-      <!--                <dxg:RuntimeStringIdInfo Id="ColumnChooserCaption" Value="ستون های مخفی"/>-->
-      <!--                <dxg:RuntimeStringIdInfo Id="MenuColumnShowColumnChooser" Value="نمایش انتخاب ستون"/>-->
-      <!--                <dxg:RuntimeStringIdInfo Id="MenuColumnHideColumnChooser" Value="مخفی کردن انتخاب ستون"/>-->
-      <!--                <dxg:RuntimeStringIdInfo Id="MenuColumnFilterEditor" Value="ویرایشگر فیلتر"/>-->
-      <!--              </dxg:GridRuntimeStringCollection>-->
-      <!--            </Setter.Value>-->
-      <!--            </Setter>-->
-      <!--        </Style.Setters>-->
-      <!---->
+            <Style TargetType="TextBlock" x:Key="TextBlockStyle" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Style.Setters>
+                    <Setter Property="FontFamily" Value="{StaticResource FontFamily1}"/>
+                    <Setter Property="FontSize" Value="{StaticResource FontSize1X}"/>
+                </Style.Setters>
+            </Style>
+
+            <Style TargetType="common:LayoutItem">
+                <Style.Setters>
+                    <Setter Property="FontFamily" Value="{StaticResource FontFamily1}"/>
+                    <Setter Property="FontSize" Value="{StaticResource FontSize1X}"/>
+                </Style.Setters>
+            </Style>
+
+            <Style TargetType="TextBox" x:Key="TextBoxStyle" BasedOn="{StaticResource {x:Type TextBox}}">
+                <Style.Setters>
+                    <Setter Property="FontFamily" Value="{StaticResource FontFamily1}"/>
+                    <Setter Property="FontSize" Value="{StaticResource FontSize1X}"/>
+                </Style.Setters>
+            </Style>
+
+            <Style TargetType="ComboBox" x:Key="ComboBoxStyle" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Style.Setters>
+                    <Setter Property="FontFamily" Value="{StaticResource FontFamily1}"/>
+                    <Setter Property="FontSize" Value="{StaticResource FontSize1X}"/>
+                </Style.Setters>
+            </Style>
+
+            <Style TargetType="TextBlock" x:Key="TextBlockStyle2" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Style.Setters>
+                    <Setter Property="FontFamily" Value="{StaticResource FontFamily2}"/>
+                    <Setter Property="FontSize" Value="{StaticResource FontSize2X}"/>
+                </Style.Setters>
+            </Style>
+            <common:ValueSignToBooleanConverter x:Key="ValueSignToBooleanConverter" />
+            <Style x:Key="BuyColumnStyle" TargetType="dxg:GridColumn">
+                <Setter Property="CellStyle">
+                    <Setter.Value>
+                        <Style TargetType="{x:Type dxg:CellContentPresenter}" BasedOn="{StaticResource {themes:GridRowThemeKey ResourceKey=CellStyle}}">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Background" Value="#E0FFE0"/>
+                            <Setter Property="Foreground" Value="#1F001F"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsFocusedCell" Value="True">
+                                    <Setter Property="Background" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="SellColumnStyle" TargetType="dxg:GridColumn">
+                <Setter Property="CellStyle">
+                    <Setter.Value>
+                        <Style TargetType="{x:Type dxg:CellContentPresenter}" BasedOn="{StaticResource {themes:GridRowThemeKey ResourceKey=CellStyle}}">
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Background" Value="#FFE0E0"/>
+                            <Setter Property="Foreground" Value="#001F1F"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsFocusedCell" Value="True">
+                                    <Setter Property="Background" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <common:StatusConverter x:Key="StatusConverter" />
+
+            <!--      <Style TargetType="{dxg:TableView}" BasedOn="{StaticResource {dxg:TableView}}">-->
+            <!--        <Style.Setters> RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TextBlock}}, Path=Text-->
+            <!--          <Setter Property="dxg:TableView.RuntimeLocalizationStrings">-->
+            <!--            <Setter.Value>-->
+            <!--              <dxg:GridRuntimeStringCollection>-->
+            <!--                <dxg:RuntimeStringIdInfo Id="ColumnChooserCaption" Value="ستون های مخفی"/>-->
+            <!--                <dxg:RuntimeStringIdInfo Id="MenuColumnShowColumnChooser" Value="نمایش انتخاب ستون"/>-->
+            <!--                <dxg:RuntimeStringIdInfo Id="MenuColumnHideColumnChooser" Value="مخفی کردن انتخاب ستون"/>-->
+            <!--                <dxg:RuntimeStringIdInfo Id="MenuColumnFilterEditor" Value="ویرایشگر فیلتر"/>-->
+            <!--              </dxg:GridRuntimeStringCollection>-->
+            <!--            </Setter.Value>-->
+            <!--            </Setter>-->
+            <!--        </Style.Setters>-->
+            <!---->
       <!--      </Style>-->
-      <Style TargetType="dxg:GridColumn" x:Key="ColumnFormulaStyle">
-        <Setter Property="UnboundType" Value="Decimal"/>
-        <Setter Property="AllowUnboundExpressionEditor" Value="True"/>
-        <Setter Property="AllowEditing" Value="False"/>
-        <Setter Property="EditSettings">
-          <Setter.Value>
-            <dxe:TextEditSettings DisplayFormat="N2"/>
-          </Setter.Value>
-        </Setter>
-<!--        <Setter Property="EditSettings" Value="dxe:TextSettings DisplayFormat=N0"/>-->
-      </Style>
-    </ResourceDictionary>
-  </Application.Resources>
+            <Style TargetType="dxg:GridColumn" x:Key="ColumnFormulaStyle">
+                <Setter Property="UnboundType" Value="Decimal"/>
+                <Setter Property="AllowUnboundExpressionEditor" Value="True"/>
+                <Setter Property="AllowEditing" Value="False"/>
+                <Setter Property="EditSettings">
+                    <Setter.Value>
+                        <dxe:TextEditSettings DisplayFormat="N2"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="CellTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                            <TextBlock Text="{Binding Path=Value,StringFormat=#0.00;(#0.00)}" TextAlignment="Center"/>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Value, Converter={StaticResource ValueSignToBooleanConverter}}" Value="False">
+                                    <Setter Property="TextBlock.Foreground" Value="Red"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Value, Converter={StaticResource ValueSignToBooleanConverter}}" Value="True">
+                                    <Setter Property="TextBlock.Foreground" Value="Green"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Value}" Value="0">
+                                    <Setter Property="TextBlock.Foreground" Value="Black"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                </Setter.Value>    
+                </Setter>
+                <!--        <Setter Property="EditSettings" Value="dxe:TextSettings DisplayFormat=N0"/>-->
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

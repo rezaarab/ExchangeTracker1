@@ -53,6 +53,7 @@ namespace ExchangeTracker.Presentation.ViewModel
 
         public void OnClose(MenuCommandObject menuCommandObject)
         {
+            menuCommandObject.Navigator.NavigateExit();
             MenuCommandObjects.Remove(menuCommandObject);
             if (!MenuCommandObjects.Any())
                 AppHelper.MainWindow.Navigate("OnlineTrackItemsView");

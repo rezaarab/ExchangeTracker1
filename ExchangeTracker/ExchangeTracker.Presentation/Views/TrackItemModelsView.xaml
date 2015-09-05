@@ -1,0 +1,180 @@
+﻿<common:UserControlBase  x:Class="ExchangeTracker.Presentation.Views.TrackItemModelsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:common="clr-namespace:ExchangeTracker.Presentation.Common"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:themes="http://schemas.devexpress.com/winfx/2008/xaml/grid/themekeys"
+    DataContext="{Binding Source={StaticResource Locator}, Path=TrackItemModelsViewModel}"
+    Loaded="TrackItemModelsView_OnLoaded"
+                         x:Name="OnlineTrackUserControl"
+  >
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate x:Key="SignCellTemplate">
+                <TextBlock Text="{Binding DisplayMemberBindingValue, Mode=OneWay,StringFormat={}{0:#,#;(#,#)}}" TextAlignment="Center"/>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding DisplayMemberBindingValue, Converter={StaticResource ValueSignToBooleanConverter}}" Value="False">
+                        <Setter Property="TextBlock.Foreground" Value="Red"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding DisplayMemberBindingValue, Converter={StaticResource ValueSignToBooleanConverter}}" Value="True">
+                        <Setter Property="TextBlock.Foreground" Value="Green"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding DisplayMemberBindingValue}" Value="0">
+                        <Setter Property="TextBlock.Foreground" Value="Black"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+            <DataTemplate x:Key="PercentCellTemplate">
+                <TextBlock Text="{Binding DisplayMemberBindingValue, Mode=OneWay,StringFormat=#0.0#;(#0.0#)}" TextAlignment="Center"/>
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding DisplayMemberBindingValue, Converter={StaticResource ValueSignToBooleanConverter}}" Value="False">
+                        <Setter Property="TextBlock.Foreground" Value="Red"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding DisplayMemberBindingValue, Converter={StaticResource ValueSignToBooleanConverter}}" Value="True">
+                        <Setter Property="TextBlock.Foreground" Value="Green"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding DisplayMemberBindingValue}" Value="0">
+                        <Setter Property="TextBlock.Foreground" Value="Black"/>
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+            <common:TimeSpanToBackGround x:Key="TimeSpanToBackGround" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ToolBar Grid.Row="0">
+            <Button x:Name="ExcellButton" Content="EXCEL" Click="ExcellButton_OnClick"></Button>
+        </ToolBar>
+        <dxg:GridControl Grid.Row="1" Name="ModelGridControl" ItemsSource="{Binding TrackItemModels}"
+                 SelectionMode="Row"
+                 SelectedItem="{Binding CurrentTrackItemModel}"
+                 dx:DXSerializer.StoreLayoutMode="All"
+                 CustomUnboundColumnData="DataGrid_OnCustomUnboundColumnData"
+      >
+            <dxg:GridControl.Columns>
+
+                <dxg:GridColumn FieldName="TimeSpan" x:Name="TimeSpan" Header="زمان" Binding="{Binding TimeSpan}">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DisplayMemberBindingValue,StringFormat=hh\\:mm}" 
+                                       TextAlignment="Center" Foreground="MidnightBlue"
+                                       Background="{Binding DisplayMemberBindingValue,Converter={StaticResource TimeSpanToBackGround}}"/>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
+
+                <dxg:GridColumn FieldName="LastTransactionPrice" x:Name="LastTransactionPrice" Header="قیمت آخرین معامله" Binding="{Binding LastTransactionPrice}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"  CellTemplate="{StaticResource SignCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="FinalPrice" x:Name="FinalPrice" Header="قیمت پایانی" Binding="{Binding FinalPrice}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"  CellTemplate="{StaticResource SignCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="TransactionCount" x:Name="TransactionCount" Header="تعداد معاملات" Binding="{Binding TransactionCount}"  CellTemplate="{StaticResource SignCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="TransactionValue" x:Name="TransactionValue" Header="ارزش معاملات" Binding="{Binding TransactionValue}"  EditSettings="{dxe:TextSettings DisplayFormat=N0}" CellTemplate="{StaticResource SignCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="TransactionVolume" x:Name="TransactionVolume" Header="حجم معاملات" Binding="{Binding TransactionVolume}"  CellTemplate="{StaticResource SignCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="BuyRealCount" x:Name="BuyRealCount" Header="تعداد خرید PER" Binding="{Binding BuyRealCount}"
+                        Style="{StaticResource BuyColumnStyle}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"/>
+
+                <dxg:GridColumn FieldName="BuyLegalCount" x:Name="BuyLegalCount" Header="تعداد خرید CO" Binding="{Binding BuyLegalCount}"
+                         Style="{StaticResource BuyColumnStyle}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"/>
+
+                <dxg:GridColumn FieldName="BuyRealVolume" x:Name="BuyRealVolume" Header="حجم خرید PER" Binding="{Binding BuyRealVolume}"
+                        Style="{StaticResource BuyColumnStyle}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"/>
+
+                <dxg:GridColumn FieldName="BuyRealPercent" x:Name="BuyRealPercent" Header="درصد خرید PER"
+                    Binding="{Binding BuyRealPercent}" Style="{StaticResource BuyColumnStyle}" CellTemplate="{StaticResource PercentCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="BuyLegalVolume" x:Name="BuyLegalVolume" Header="حجم خرید CO" Binding="{Binding BuyLegalVolume}"
+                        Style="{StaticResource BuyColumnStyle}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"/>
+
+                <dxg:GridColumn FieldName="BuyLegalPercent" x:Name="BuyLegalPercent" Header="درصد خرید PER"
+                    Binding="{Binding BuyLegalPercent}" Style="{StaticResource BuyColumnStyle}" CellTemplate="{StaticResource PercentCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="SellRealCount" x:Name="SellRealCount" Header="تعداد فروش PER" Binding="{Binding SellRealCount}"
+                        Style="{StaticResource SellColumnStyle}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"/>
+
+                <dxg:GridColumn FieldName="SellLegalCount" x:Name="SellLegalCount" Header="تعداد فروش CO" Binding="{Binding SellLegalCount}"
+                         Style="{StaticResource SellColumnStyle}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"/>
+
+                <dxg:GridColumn FieldName="SellRealVolume" x:Name="SellRealVolume" Header="حجم فروش PER" Binding="{Binding SellRealVolume}"
+                        Style="{StaticResource SellColumnStyle}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"/>
+
+                <dxg:GridColumn FieldName="SellRealPercent" x:Name="SellRealPercent" Header="درصد فروش PER"
+                    Binding="{Binding SellRealPercent}" Style="{StaticResource SellColumnStyle}" CellTemplate="{StaticResource PercentCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="SellLegalVolume" x:Name="SellLegalVolume" Header="حجم فروش CO" Binding="{Binding SellLegalVolume}"
+                        Style="{StaticResource SellColumnStyle}" EditSettings="{dxe:TextSettings DisplayFormat=N0}"/>
+
+                <dxg:GridColumn FieldName="SellLegalPercent" x:Name="SellLegalPercent" Header="درصد فروش PER"
+                    Binding="{Binding SellLegalPercent}" Style="{StaticResource SellColumnStyle}" CellTemplate="{StaticResource PercentCellTemplate}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn1" x:Name="FormulaColumn1" Header="فرمول 1" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn2" x:Name="FormulaColumn2" Header="فرمول 2" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn3" x:Name="FormulaColumn3" Header="فرمول 3" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn4" x:Name="FormulaColumn4" Header="فرمول 4" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn5" x:Name="FormulaColumn5" Header="فرمول 5" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn6" x:Name="FormulaColumn6" Header="فرمول 6" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn7" x:Name="FormulaColumn7" Header="فرمول 7" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn8" x:Name="FormulaColumn8" Header="فرمول 8" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn9" x:Name="FormulaColumn9" Header="فرمول 9" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn10" Header="فرمول 10" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn11" Header="فرمول 11" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn12" Header="فرمول 12" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn13" Header="فرمول 13" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn14" Header="فرمول 14" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn15" Header="فرمول 15" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn16" Header="فرمول 16" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn17" Header="فرمول 17" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn18" Header="فرمول 18" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn19" Header="فرمول 19" Style="{StaticResource ColumnFormulaStyle}"/>
+
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn20" Header="فرمول 20" Style="{StaticResource ColumnFormulaStyle}"/>
+
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.GroupSummary>
+                <dxg:GridSummaryItem SummaryType="Sum" />
+            </dxg:GridControl.GroupSummary>
+            <dxg:GridControl.View>
+                <dxg:TableView x:Name="View" ShowGroupedColumns="False" NavigationStyle="Cell" AutoWidth="False" ScrollingMode="Smart"
+                       ShowAutoFilterRow="False" FilterEditorCreated="View_OnFilterEditorCreated"
+                       AllowAdvancedHorizontalNavigation="True" PreviewKeyDown="View_OnPreviewKeyDown"
+                       ShowGridMenu="View_OnShowGridMenu" UseLightweightTemplates="None"
+                       Background="NavajoWhite" AllowSorting="False" AllowColumnFiltering="False" AllowGrouping="False" ShowGroupPanel="False">
+                    <dxg:TableView.RowStyle>
+                        <Style TargetType="{x:Type dxg:GridRowContent}"  BasedOn="{StaticResource {themes:GridRowThemeKey ResourceKey=RowStyle}}">
+                            <Style.Triggers>
+                                <Trigger Property="dxg:GridViewBase.IsFocusedRow" Value="True">
+                                    <Setter Property="Background" Value="Linen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </dxg:TableView.RowStyle>
+                </dxg:TableView>
+            </dxg:GridControl.View>
+
+        </dxg:GridControl>
+    </Grid>
+</common:UserControlBase >

@@ -4,10 +4,16 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using DevExpress.Data;
 using DevExpress.Xpf.Bars;
+using DevExpress.Xpf.Core;
+using DevExpress.Xpf.Editors;
+using DevExpress.Xpf.Editors.ExpressionEditor;
+using DevExpress.Xpf.Editors.ExpressionEditor.Native;
 using DevExpress.Xpf.Editors.Helpers;
 using DevExpress.Xpf.Grid;
 using ExchangeTracker.Presentation.Common;
+using ExchangeTracker.Presentation.Services;
 using ExchangeTracker.Presentation.ViewModels;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Win32;
@@ -15,22 +21,33 @@ using Microsoft.Win32;
 namespace ExchangeTracker.Presentation.Views
 {
     /// <summary>
-    /// Interaction logic for OnlineTrackItems.xaml
+    /// Interaction logic for TrackItemModels.xaml
     /// </summary>
-    public partial class CompanyHistoryView
+    public partial class TrackItemModelsView
     {
-        public CompanyHistoryView()
+        public TrackItemModelsView()
         {
             InitializeComponent();
-            GridHelper.RestoreLayout(dataGrid);
+            GridHelper.RestoreLayout(ModelGridControl);
         }
 
-        public CompanyHistoryViewModel ViewModel
+        public TrackItemModelsViewModel ViewModel
         {
             get
             {
-                return DataContext as CompanyHistoryViewModel;
+                return DataContext as TrackItemModelsViewModel;
             }
+        }
+
+
+        private void TrackItemModelsView_OnLoaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        public override void OnUnloaded()
+        {
+            base.OnUnloaded();
+            GridHelper.SaveLayout(ModelGridControl);
         }
 
         private void ExcellButton_OnClick(object sender, RoutedEventArgs e)
@@ -42,25 +59,13 @@ namespace ExchangeTracker.Presentation.Views
             }
         }
 
-        private void CompanyHistoryView_OnLoaded(object sender, RoutedEventArgs e)
+        private void DataGrid_OnCustomUnboundColumnData(object sender, GridColumnDataEventArgs e)
         {
-        }
-
-        public override void OnUnloaded()
-        {
-            base.OnUnloaded();
-            GridHelper.SaveLayout(dataGrid);
         }
 
         private void View_OnFilterEditorCreated(object sender, FilterEditorEventArgs e)
         {
-            e.FilterControl.Foreground = Brushes.Black;
-        }
-
-        private void View_OnPreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if ((e.Key == Key.Left && dataGrid.CurrentColumn.IsLast) || (e.Key == Key.Right && dataGrid.CurrentColumn.IsFirst))
-                e.Handled = true;
+            e.FilterControl.Foreground = Brushes.DarkSlateBlue;
         }
 
         private void View_OnShowGridMenu(object sender, GridMenuEventArgs e)
@@ -82,13 +87,23 @@ namespace ExchangeTracker.Presentation.Views
                 column.Header = changeForm.NewValue;
         }
 
-        private void View_OnRowDoubleClick(object sender, RowDoubleClickEventArgs e)
+        private void UIElement_OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.HitInfo.InRow && e.HitInfo.RowHandle >= 0)
-            {
-                ViewModel.NavigateTrackHistory();
-            }
+            if (e.Key != Key.Delete && e.Key != Key.Back)
+                return;
 
+            var edit = (ComboBoxEdit)sender;
+            if (!edit.AllowNullInput || edit.SelectionLength != edit.Text.Length)
+                return;
+
+            edit.EditValue = null;
+            e.Handled = true;
+        }
+
+        private void View_OnPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.Key == Key.Left && ModelGridControl.CurrentColumn.IsLast) || (e.Key == Key.Right && ModelGridControl.CurrentColumn.IsFirst))
+                e.Handled = true;
         }
     }
 }
