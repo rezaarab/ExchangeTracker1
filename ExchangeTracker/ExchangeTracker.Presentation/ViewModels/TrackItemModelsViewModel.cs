@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
+using ExchangeTracker.Domain;
 using ExchangeTracker.Presentation.Common;
 using ExchangeTracker.Presentation.Services;
+using Timer = System.Timers.Timer;
 
 namespace ExchangeTracker.Presentation.ViewModels
 {
@@ -67,10 +69,16 @@ namespace ExchangeTracker.Presentation.ViewModels
         private DateTime _date;
 
         public int Interval { get; set; }
+        public TrackItem InputTrackItem { get; set; }
 
         private void UpdateItems()
         {
             var current = CurrentTrackItemModel == null ? TimeSpan.Zero : CurrentTrackItemModel.TimeSpan;
+            var isReturn = false;
+            if (InputTrackItem != null)
+                Task.Factory.StartNew(() => StockService.RefreshTrackItem(InputTrackItem)).ContinueWith(p => isReturn = true);
+            if (!isReturn)
+                Thread.Sleep(TimeSpan.FromMilliseconds(50));
             var companyTrackItemModels = DataService.GetCompanyTrackItemModels(StockId, Date, Interval);
             TrackItemModels.Clear();
             companyTrackItemModels

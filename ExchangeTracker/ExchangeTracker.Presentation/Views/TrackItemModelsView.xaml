@@ -158,11 +158,11 @@
                 <dxg:GridSummaryItem SummaryType="Sum" />
             </dxg:GridControl.GroupSummary>
             <dxg:GridControl.View>
-                <dxg:TableView x:Name="View" ShowGroupedColumns="False" NavigationStyle="Cell" AutoWidth="False" ScrollingMode="Smart"
-                       ShowAutoFilterRow="False" FilterEditorCreated="View_OnFilterEditorCreated"
+                <dxg:TableView x:Name="View" ShowGroupedColumns="True" NavigationStyle="Cell" AutoWidth="False" ScrollingMode="Smart"
+                       ShowAutoFilterRow="True" FilterEditorCreated="View_OnFilterEditorCreated"
                        AllowAdvancedHorizontalNavigation="True" PreviewKeyDown="View_OnPreviewKeyDown"
                        ShowGridMenu="View_OnShowGridMenu" UseLightweightTemplates="None"
-                       Background="NavajoWhite" AllowSorting="False" AllowColumnFiltering="False" AllowGrouping="False" ShowGroupPanel="False">
+                       Background="NavajoWhite" AllowSorting="True" AllowColumnFiltering="True" AllowGrouping="True" ShowGroupPanel="True">
                     <dxg:TableView.RowStyle>
                         <Style TargetType="{x:Type dxg:GridRowContent}"  BasedOn="{StaticResource {themes:GridRowThemeKey ResourceKey=RowStyle}}">
                             <Style.Triggers>

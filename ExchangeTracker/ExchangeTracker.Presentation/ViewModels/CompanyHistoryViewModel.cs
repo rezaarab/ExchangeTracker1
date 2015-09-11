@@ -89,6 +89,7 @@ namespace ExchangeTracker.Presentation.ViewModels
                     StockId = CurrentTrackItem.Company.StockId,
                     Date = CurrentTrackItem.LastTransactionDateTime,
                     Interval = StaticReference.Interval,
+                    InputTrackItem = CurrentTrackItem == TrackItem ? CurrentTrackItem : null,
                 };
                 var menuCommandObject = new MenuCommandObject(new TrackItemModelsView
                 {

@@ -79,24 +79,11 @@ namespace ExchangeTracker.Presentation.Services
         {
             return result
                 .GroupBy(p => p.LastTransactionDateTime)
-                .Select(p => new TrackItemModel
-                {
-                    Id = p.Aggregate((w, m) => w.RegisterDateTime < m.RegisterDateTime ? w : m).Id,
-                    LastTransactionDateTime = p.Key,
-                    FinalPrice = p.Max(q => q.FinalPrice),
-                    BuyLegalCount = p.Max(q => q.BuyLegalCount),
-                    BuyLegalVolume = p.Max(q => q.BuyLegalVolume),
-                    BuyRealVolume = p.Max(q => q.BuyRealVolume),
-                    BuyRealCount = p.Max(q => q.BuyRealCount),
-                    SellLegalVolume = p.Max(q => q.SellLegalVolume),
-                    SellLegalCount = p.Max(q => q.SellLegalCount),
-                    SellRealVolume = p.Max(q => q.SellRealVolume),
-                    SellRealCount = p.Max(q => q.SellRealCount),
-                    LastTransactionPrice = p.Max(q => q.LastTransactionPrice),
-                    TransactionCount = p.Max(q => q.TransactionCount),
-                    TransactionValue = p.Max(q => q.TransactionValue),
-                    TransactionVolume = p.Max(q => q.TransactionVolume),
-                }).OrderBy(p => p.LastTransactionDateTime).ToList();
+                .Select(p => p.OrderByDescending(q => q.RegisterDateTime)
+                    .FirstOrDefault(q => q.BuyLegalCount > 0 || q.BuyRealCount > 0 || q.SellLegalCount > 0 || q.SellRealCount > 0))
+                .Where(p => p != null)
+                .OrderBy(p => p.LastTransactionDateTime)
+                .ToList();
         }
 
         private static TrackItemModel GetDiffTrackItemModel(TimeSpan timeSpan, TrackItemModel lastTrackItemModelProceed, TrackItemModel trackItemModel)
