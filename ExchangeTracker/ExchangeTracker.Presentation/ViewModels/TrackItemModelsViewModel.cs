@@ -74,11 +74,6 @@ namespace ExchangeTracker.Presentation.ViewModels
         private void UpdateItems()
         {
             var current = CurrentTrackItemModel == null ? TimeSpan.Zero : CurrentTrackItemModel.TimeSpan;
-            var isReturn = false;
-            if (InputTrackItem != null)
-                Task.Factory.StartNew(() => StockService.RefreshTrackItem(InputTrackItem)).ContinueWith(p => isReturn = true);
-            if (!isReturn)
-                Thread.Sleep(TimeSpan.FromMilliseconds(50));
             var companyTrackItemModels = DataService.GetCompanyTrackItemModels(StockId, Date, Interval);
             TrackItemModels.Clear();
             companyTrackItemModels

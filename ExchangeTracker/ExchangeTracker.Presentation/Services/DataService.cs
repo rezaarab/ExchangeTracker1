@@ -43,36 +43,54 @@ namespace ExchangeTracker.Presentation.Services
                 var first = result.FirstOrDefault();
                 if (first == null)
                     return result;
-                var startTime = first.LastTransactionDateTime.TimeOfDay;
+                var startTime = SetSeconds(first.LastTransactionDateTime.TimeOfDay, 0);
                 var endTime = DateTime.Now.TimeOfDay.Hours >= 13 ? new TimeSpan(13, 0, 0) : (startTime > DateTime.Now.TimeOfDay ? startTime : DateTime.Now.TimeOfDay);
                 var count = (int)((endTime - startTime).TotalMinutes / interval);
                 var trackItemModelTimes = Enumerable.Range(1, count)
                     .Select(p => startTime + TimeSpan.FromMinutes(p * interval))
-                    .Select(p => new { timeSpan = p, trackItemModel = FindLastTrackItemModelInRange(result, p + TimeSpan.FromMinutes(-interval), p) })
+                    .Select(p => new { timeSpan = p, trackItemModel = FindLastTrackItemModelInRange(result.Except(new[] { first }), p + TimeSpan.FromMinutes(-interval), p) })
                     .ToList()
                     ;
                 SetTrackItemModelPercents(first);
                 var lastTrackItemModelProceed = first;
-                first.TimeSpan = first.LastTransactionDateTime.TimeOfDay.Add(TimeSpan.FromSeconds(-first.LastTransactionDateTime.TimeOfDay.Seconds));
+                first.TimeSpan = SetSeconds(first.LastTransactionDateTime.TimeOfDay, 1);
                 var finalResult = new List<TrackItemModel> { first };
                 trackItemModelTimes.ForEach(p =>
                 {
                     if (p.trackItemModel == null)
-                        finalResult.Add(GetEmptyTrackItemModel(p.timeSpan, lastTrackItemModelProceed));
+                    {
+                        var emptyTrackItemModel = GetEmptyTrackItemModel(p.timeSpan, lastTrackItemModelProceed);
+                        emptyTrackItemModel.TimeSpan = SetSeconds(emptyTrackItemModel.TimeSpan, 0);
+                        finalResult.Add(emptyTrackItemModel);
+                    }
                     else
                     {
-                        finalResult.Add(GetDiffTrackItemModel(p.timeSpan, lastTrackItemModelProceed, p.trackItemModel));
+                        var diffTrackItemModel = GetDiffTrackItemModel(p.timeSpan, lastTrackItemModelProceed, p.trackItemModel);
+                        diffTrackItemModel.TimeSpan = SetSeconds(diffTrackItemModel.TimeSpan, 2);
+                        SetTrackItemModelPercents(diffTrackItemModel);
+                        finalResult.Add(diffTrackItemModel);
                         lastTrackItemModelProceed = p.trackItemModel;
                     }
                 });
-                if (trackItemModelTimes.Any(p => p.trackItemModel != null))
+                if (trackItemModelTimes.Count(p => p.trackItemModel != null) > 1)
                 {
                     var item = trackItemModelTimes.Last(p => p.trackItemModel != null);
-                    item.trackItemModel.TimeSpan = item.timeSpan.Add(TimeSpan.FromSeconds(1));
+                    item.trackItemModel.TimeSpan = SetSeconds(trackItemModelTimes.Last().timeSpan, 3);
+                    SetTrackItemModelPercents(item.trackItemModel);
                     finalResult.Add(item.trackItemModel);
                 }
                 return finalResult;
+                // timespan seconds 
+                // 0:No updated
+                // 1:first record
+                // 2:row updated
+                // 3:last row
             }
+        }
+
+        public static TimeSpan SetSeconds(TimeSpan timespan, int second)
+        {
+            return timespan.Add(TimeSpan.FromSeconds(-timespan.Seconds + second));
         }
 
         private static List<TrackItemModel> MergeShrink(IEnumerable<TrackItemModel> result)
@@ -95,19 +113,15 @@ namespace ExchangeTracker.Presentation.Services
                 StockId = trackItemModel.StockId,
                 Id = Guid.NewGuid(),
                 LastTransactionDateTime = trackItemModel.LastTransactionDateTime,
-                BuyLegalPercent = trackItemModel.BuyLegalPercent - lastTrackItemModelProceed.BuyLegalPercent,
                 BuyLegalVolume = trackItemModel.BuyLegalVolume - lastTrackItemModelProceed.BuyLegalVolume,
                 BuyRealCount = trackItemModel.BuyRealCount - lastTrackItemModelProceed.BuyRealCount,
-                BuyRealPercent = trackItemModel.BuyRealPercent - lastTrackItemModelProceed.BuyRealPercent,
                 BuyRealVolume = trackItemModel.BuyRealVolume - lastTrackItemModelProceed.BuyRealVolume,
                 FinalPrice = trackItemModel.FinalPrice,
                 LastTransactionPrice = trackItemModel.LastTransactionPrice,
                 RegisterDateTime = DateTime.Now,
                 SellLegalCount = trackItemModel.SellLegalCount - lastTrackItemModelProceed.SellLegalCount,
-                SellLegalPercent = trackItemModel.SellLegalPercent - lastTrackItemModelProceed.SellLegalPercent,
                 SellLegalVolume = trackItemModel.SellLegalVolume - lastTrackItemModelProceed.SellLegalVolume,
                 SellRealCount = trackItemModel.SellRealCount - lastTrackItemModelProceed.SellRealCount,
-                SellRealPercent = trackItemModel.SellRealPercent - lastTrackItemModelProceed.SellRealPercent,
                 SellRealVolume = trackItemModel.SellRealVolume - lastTrackItemModelProceed.SellRealVolume,
                 TransactionCount = trackItemModel.TransactionCount - lastTrackItemModelProceed.TransactionCount,
                 TransactionValue = trackItemModel.TransactionValue - lastTrackItemModelProceed.TransactionValue,

@@ -66,11 +66,11 @@ namespace ExchangeTracker.Presentation.Common
             if (value is TimeSpan)
             {
                 var item = (TimeSpan)value;
-                if (item.Seconds == 0)// data updated
+                if (item.Seconds == 2)// data updated
                     return Brushes.CadetBlue;
-                if (item.Seconds == 1)//last record
+                if (item.Seconds == 3 || item.Seconds == 1)//last record
                     return Brushes.Tomato;
-                if (item.Seconds == 2)//empty record
+                if (item.Seconds == 0)//empty record
                     return Brushes.Transparent;
             }
             return Brushes.Transparent;
