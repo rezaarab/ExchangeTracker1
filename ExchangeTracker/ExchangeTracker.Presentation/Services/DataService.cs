@@ -44,7 +44,7 @@ namespace ExchangeTracker.Presentation.Services
                 if (first == null)
                     return result;
                 var startTime = SetSeconds(first.LastTransactionDateTime.TimeOfDay, 0);
-                var endTime = DateTime.Now.TimeOfDay.Hours >= 13 ? new TimeSpan(13, 0, 0) : (startTime > DateTime.Now.TimeOfDay ? startTime : DateTime.Now.TimeOfDay);
+                var endTime = DateTime.Now.TimeOfDay.Hours >= 13 || date.Date != DateTime.Now.Date ? new TimeSpan(13, 0, 0) : (startTime > DateTime.Now.TimeOfDay ? startTime : DateTime.Now.TimeOfDay);
                 var count = (int)((endTime - startTime).TotalMinutes / interval);
                 var trackItemModelTimes = Enumerable.Range(1, count)
                     .Select(p => startTime + TimeSpan.FromMinutes(p * interval))

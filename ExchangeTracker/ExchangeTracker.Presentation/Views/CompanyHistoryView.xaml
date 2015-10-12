@@ -138,25 +138,26 @@
                 <dxg:GridColumn FieldName="FormulaColumn7" x:Name="FormulaColumn7" Header="فرمول 7" Style="{StaticResource ColumnFormulaStyle}"/>
                 <dxg:GridColumn FieldName="FormulaColumn8" x:Name="FormulaColumn8" Header="فرمول 8" Style="{StaticResource ColumnFormulaStyle}"/>
                 <dxg:GridColumn FieldName="FormulaColumn9" x:Name="FormulaColumn9" Header="فرمول 9" Style="{StaticResource ColumnFormulaStyle}"/>
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn11" Header="فرمول 11" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn10" Header="فرمول 10" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn11" x:Name="FormulaColumn11" Header="فرمول 11" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn12" Header="فرمول 12" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn12" x:Name="FormulaColumn12" Header="فرمول 12" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn13" Header="فرمول 13" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn13" x:Name="FormulaColumn13" Header="فرمول 13" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn14" Header="فرمول 14" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn14" x:Name="FormulaColumn14" Header="فرمول 14" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn15" Header="فرمول 15" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn15" x:Name="FormulaColumn15" Header="فرمول 15" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn16" Header="فرمول 16" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn16" x:Name="FormulaColumn16" Header="فرمول 16" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn17" Header="فرمول 17" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn17" x:Name="FormulaColumn17" Header="فرمول 17" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn18" Header="فرمول 18" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn18" x:Name="FormulaColumn18" Header="فرمول 18" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn19" Header="فرمول 19" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn19" x:Name="FormulaColumn19" Header="فرمول 19" Style="{StaticResource ColumnFormulaStyle}"/>
 
-                <dxg:GridColumn FieldName="FormulaColumn10" x:Name="FormulaColumn20" Header="فرمول 20" Style="{StaticResource ColumnFormulaStyle}"/>
+                <dxg:GridColumn FieldName="FormulaColumn20" x:Name="FormulaColumn20" Header="فرمول 20" Style="{StaticResource ColumnFormulaStyle}"/>
             </dxg:GridControl.Columns>
             <dxg:GridControl.GroupSummary>
                 <dxg:GridSummaryItem SummaryType="Count" />

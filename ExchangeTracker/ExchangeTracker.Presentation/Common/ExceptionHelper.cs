@@ -12,7 +12,7 @@ namespace ExchangeTracker.Presentation.Common
         public static void ReportSimpleException(Exception ex)
         {
             string messageBoxText = string.Format("{0} {1} {2}", "Error", Environment.NewLine, GetExceptionMessages(ex));
-            MessageBoxHelper.Show(ex.Message, "هشدار", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //MessageBoxHelper.Show(ex.Message, "هشدار", MessageBoxButton.OK, MessageBoxImage.Warning);
             try
             {
                 File.AppendAllText("C:\\ExchangeTracker\\Errors.txt",
@@ -28,7 +28,7 @@ namespace ExchangeTracker.Presentation.Common
         public static void ReportException(Exception ex, string headerError)
         {
             string messageBoxText = string.Format("{0} {1} {2}", headerError, Environment.NewLine, GetExceptionMessages(ex));
-            MessageBoxHelper.Show(messageBoxText, "هشدار", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //MessageBoxHelper.Show(messageBoxText, "هشدار", MessageBoxButton.OK, MessageBoxImage.Warning);
             try
             {
                 File.AppendAllText("C:\\ExchangeTracker\\Errors.txt",

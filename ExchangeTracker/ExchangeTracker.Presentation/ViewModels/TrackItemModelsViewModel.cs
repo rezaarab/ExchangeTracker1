@@ -80,7 +80,10 @@ namespace ExchangeTracker.Presentation.ViewModels
                 //                .Where(p => p.TimeSpan > TrackItemModels.DefaultIfEmpty(new TrackItemModel { TimeSpan = TimeSpan.Zero }).Max(q => q.TimeSpan))
                 .ToList()
                 .ForEach(p => TrackItemModels.Add(p));
-            CurrentTrackItemModel = TrackItemModels.FirstOrDefault(p => p.TimeSpan == current);
+            if (current.Seconds == 1 || current.Seconds == 3)
+                CurrentTrackItemModel = TrackItemModels.FirstOrDefault(p => p.TimeSpan.Seconds == current.Seconds);
+            else
+                CurrentTrackItemModel = TrackItemModels.FirstOrDefault(p => p.TimeSpan == current);
         }
 
         public override bool NavigateExit()
